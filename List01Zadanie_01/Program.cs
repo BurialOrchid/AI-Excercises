@@ -23,7 +23,7 @@ namespace List01Zadanie_01
         private static List<int> Generate(int numberOfDigits)
         {
             List<int> listOfDigits = new List<int>();
-            for (int i = 0; i < numberOfDigits; i++)
+            for (int i = 1; i <= numberOfDigits; i++)
             {
                 listOfDigits.Add(i);
             }
@@ -55,7 +55,37 @@ namespace List01Zadanie_01
 
         private static List<string> CreateAllPermutationsOnLastOne(List<int> listOfDigits)
         {
-            return null;
+            string permutation = listOfDigits.Aggregate("", (current, i) => current + i.ToString());
+            List<string> allPermutationsList = new List<string>();
+
+            Permute(permutation, 0, permutation.Length - 1, allPermutationsList);
+            return allPermutationsList;
+            ;
+        }
+
+        private static void Permute(string str, int l, int r, List<string> a)
+        {
+            if (l == r)
+                a.Add(str);
+            else
+            {
+                for (int i = l; i <= r; i++)
+                {
+                    str = Swap(str, l, i);
+                    Permute(str, l + 1, r, a);
+                    str = Swap(str, l, i);
+                }
+            }
+        }
+
+        private static string Swap(string a, int i, int j)
+        {
+            char[] charArray = a.ToCharArray();
+            var temp = charArray[i];
+            charArray[i] = charArray[j];
+            charArray[j] = temp;
+            string s = new string(charArray);
+            return s;
         }
 
         private static List<string> CreateAllPermutations(List<int> listOfDigits)
@@ -138,11 +168,18 @@ namespace List01Zadanie_01
                     default:
                         {
                             Console.WriteLine($"\n Im working... It may take a while...\n");
+                            //var watch = System.Diagnostics.Stopwatch.StartNew();
+                            // List<string> permutations = CreateAllPermutations(listOfDigits);
+                            //watch.Stop();
+                            //float elapsedMs = watch.ElapsedMilliseconds;
+                            //Console.WriteLine($"Created permutations in {elapsedMs / 1000} sec.\n\n");
+
                             var watch = System.Diagnostics.Stopwatch.StartNew();
-                            List<string> permutations = CreateAllPermutations(listOfDigits);
+                            List<string> permutations = CreateAllPermutationsOnLastOne(listOfDigits);
                             watch.Stop();
                             float elapsedMs = watch.ElapsedMilliseconds;
                             Console.WriteLine($"Created permutations in {elapsedMs / 1000} sec.\n");
+
                             Console.Write($"Dou You want to see them? Y/N \n");
                             selector = Console.ReadKey().KeyChar;
                             if (selector == 'y')

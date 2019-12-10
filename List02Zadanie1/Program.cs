@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace List02Zadanie1
 {
-    internal class Program
+    internal static class Program
     {
         /*
        *
@@ -12,14 +12,14 @@ namespace List02Zadanie1
        *
        */
 
-        private static void DrawChessBoard(int[] permutation)
+        private static void DrawChessBoard(string permutation)
         {
             for (int i = 1; i <= permutation.Length; i++)
             {
                 for (int j = 1; j <= permutation.Length; j++)
                 {
-                    if (permutation[i - 1] == j) Console.Write(" X ");
-                    else Console.Write(" 0 ");
+                    int numericValue = (int)char.GetNumericValue(permutation[i - 1]);
+                    Console.Write(numericValue == j ? " X " : " 0 ");
                 }
                 Console.WriteLine();
             }
@@ -31,11 +31,11 @@ namespace List02Zadanie1
          *
          */
 
-        private static bool CheckSolution(int[] permutation)
+        private static bool CheckSolution(string permutation)
         {
             for (int i = 1; i < permutation.Length; i++)
             {
-                for (int m = i + 1; m < permutation.Length; m++)
+                for (int m = i + 1; m <= permutation.Length; m++)
                 {
                     /*check if they stay in the same line
                      *
@@ -47,10 +47,12 @@ namespace List02Zadanie1
                     if (i == m) return false;
 
                     //check for same row
-                    if (permutation[i - 1] == permutation[m - 1]) return false;
+                    else if (permutation[i - 1] == permutation[m - 1]) return false;
 
                     //check for same diagonal
-                    if (Math.Abs(permutation[i - 1] - permutation[m - 1]) == Math.Abs(i - m))
+                    int x = (int)char.GetNumericValue(permutation[i - 1]);
+                    int y = (int)char.GetNumericValue(permutation[m - 1]);
+                    if (Math.Abs(x - y) == Math.Abs(i - m))
                         return false;
                 }
             }
@@ -59,54 +61,77 @@ namespace List02Zadanie1
             return true;
         }
 
-        private static int[] CreateAllPermutations(List<int> listOfDigits)
+        private static List<string> CreateAllPermutationsOnLastOne(IEnumerable<int> listOfDigits)
         {
-            List<string> previousSequence = new List<string>();
-            List<string> nextSequence = new List<string>();
+            string permutation = listOfDigits.Aggregate("", (current, i) => current + i.ToString());
+            List<string> allPermutationsList = new List<string>();
 
-            previousSequence.Add(listOfDigits.ElementAt(0).ToString());
-
-            for (int i = 1; i < listOfDigits.Count; i++)
-            {
-                nextSequence.Clear();
-                foreach (string item in previousSequence)
-                {
-                    int positionCounter = 0;
-                    while (positionCounter <= item.Length)
-                    {
-                        string newString = new string(item);
-                        newString = newString.Insert(positionCounter, listOfDigits.ElementAt(i).ToString());
-                        if (!nextSequence.Contains(newString))
-                            nextSequence.Add(newString);
-                        positionCounter++;
-                    }
-                    previousSequence = new List<string>(nextSequence);
-                }
-            }
-            List<int> intlist = nextSequence.Select(s => int.Parse(s)).ToList();
-            return intlist.ToArray();
+            Permute(permutation, 0, permutation.Length - 1, allPermutationsList);
+            return allPermutationsList;
         }
 
-        private static List<int> RandomNumberGenerator(int numberOfDigits)
+        private static void Permute(string str, int l, int r, ICollection<string> a)
+        {
+            if (l == r)
+                a.Add(str);
+            else
+            {
+                for (int i = l; i <= r; i++)
+                {
+                    str = Swap(str, l, i);
+                    Permute(str, l + 1, r, a);
+                    str = Swap(str, l, i);
+                }
+            }
+        }
+
+        private static string Swap(string a, int i, int j)
+        {
+            char[] charArray = a.ToCharArray();
+            var temp = charArray[i];
+            charArray[i] = charArray[j];
+            charArray[j] = temp;
+            string s = new string(charArray);
+            return s;
+        }
+
+        private static List<int> GenerateWithDuplicates(int numberOfDigits)
         {
             Random rnd = new Random();
             List<int> listOfDigits = new List<int>();
             for (int i = 0; i < numberOfDigits; i++)
             {
-                int nextrand = rnd.Next(numberOfDigits) + 1;
-                //Uncomment if you don't want your digits to be repeated
-                while (listOfDigits.Contains(nextrand))
-                {
-                    nextrand = rnd.Next(numberOfDigits) + 1;
-                }
-                listOfDigits.Add(nextrand);
-                Console.Write($"{listOfDigits.ElementAt(i)} ");
+                int nextRandom = rnd.Next(numberOfDigits) + 1;
+                listOfDigits.Add(nextRandom);
+            }
+
+            Console.WriteLine();
+            return listOfDigits;
+        }
+
+        private static List<int> Generate(int numberOfDigits)
+        {
+            List<int> listOfDigits = new List<int>();
+            for (int i = 1; i <= numberOfDigits; i++)
+            {
+                listOfDigits.Add(i);
             }
             Console.WriteLine();
             return listOfDigits;
         }
 
-        private static void Write(int[] list)
+        private static void Write(IEnumerable<string> list)
+        {
+            int c = 0;
+            foreach (string item in list)
+            {
+                if (c % 11 == 0) Console.WriteLine();
+                Console.Write($"{item}  ");
+                c++;
+            }
+        }
+
+        private static void Write(IEnumerable<int> list)
         {
             int c = 0;
             foreach (int item in list)
@@ -117,7 +142,7 @@ namespace List02Zadanie1
             }
         }
 
-        public static int[] IntegerToArray(int n)
+        private static int[] IntegerToArray(int n)
         {
             if (n == 0) return new int[1] { 0 };
 
@@ -133,45 +158,71 @@ namespace List02Zadanie1
 
         private static void Main(string[] args)
         {
-            Console.Write("Please type number of digits to proceed permutation: ");
             try
             {
+                //Variables
+                // Start point of the App
+                Console.Write("Please type number of digits to proceed permutation: ");
                 string inputString = Console.ReadLine();
                 int numberOfDigits = int.Parse(inputString ?? throw new InvalidOperationException());
-                Console.Write($"You select: {numberOfDigits} numbers: ");
+                Console.Write($"You select: {numberOfDigits} numbers\n");
+                Console.Write($"Select generator method:\n 1. Generate sequential numbers\n 2. Generate random numbers\n");
+                char selector = Console.ReadKey().KeyChar;
 
-                var listOfDigits = RandomNumberGenerator(numberOfDigits);
-
-                if (numberOfDigits == 0)
+                List<int> listOfDigits;
+                switch (selector)
                 {
-                    Console.WriteLine($"There is no numbers to permute");
+                    case '1':
+                        listOfDigits = Generate(numberOfDigits);
+                        Console.Write($"Your numbers are: ");
+                        Write(listOfDigits);
+                        Console.WriteLine();
+                        break;
+
+                    case '2':
+                        listOfDigits = GenerateWithDuplicates(numberOfDigits);
+                        Console.Write($"Your numbers are: ");
+                        Write(listOfDigits);
+                        Console.WriteLine();
+                        break;
+
+                    default:
+                        listOfDigits = null;
+                        throw new Exception(" Next time press 1 or 2 on keyboard");
                 }
-                else if (numberOfDigits == 1)
-                {
-                    Console.WriteLine($"Permutation of only one number equals this number, in this case this number is: {listOfDigits.ElementAt(0)}");
-                }
-                else if (numberOfDigits > 1)
-                {
-                    int[] listOfAllPermutations = CreateAllPermutations(listOfDigits);
 
-                    Write(listOfAllPermutations);
+                switch (numberOfDigits)
+                {
+                    case 0:
+                        Console.WriteLine($"There is no numbers to permute");
+                        break;
 
-                    foreach (int item in listOfAllPermutations)
-                    {
-                        int[] test = IntegerToArray(item);
-                        string ids = String.Join("", test.Select(p => p.ToString()).ToArray());
-                        if (CheckSolution(test))
+                    case 1:
+                        Console.WriteLine($"Permutation of only one number equals this number, in this case this number is: {listOfDigits.ElementAt(0)}");
+                        break;
+
+                    default:
                         {
-                            Console.WriteLine("\n------------------------");
-                            Console.WriteLine($"{ids} is a solution to problem!\n");
-                            DrawChessBoard(test);
-                            Console.WriteLine("\n\n");
-                        };
-                    }
-                }
-                else
-                {
-                    throw new Exception("Something went terribly wrong!");
+                            var watch = System.Diagnostics.Stopwatch.StartNew();
+                            List<string> listOfAllPermutations = CreateAllPermutationsOnLastOne(listOfDigits);
+                            watch.Stop();
+                            float elapsedMs = watch.ElapsedMilliseconds;
+                            Console.WriteLine($"Created {listOfAllPermutations.Count} permutations in {elapsedMs / 1000} sec.\n");
+                            Console.Write($"Dou You want to see them? Y/N \n");
+                            selector = Console.ReadKey().KeyChar;
+                            if (selector == 'y')
+                                Write(listOfAllPermutations);
+                            Console.WriteLine();
+
+                            List<string> solutions = listOfAllPermutations.Where(CheckSolution).ToList();
+                            foreach (string sol in solutions)
+                            {
+                                DrawChessBoard(sol);
+                                Console.WriteLine('\n');
+                            }
+                            Console.WriteLine($"Found {solutions.Count} solutions to {numberOfDigits} queens problem.\n");
+                            break;
+                        }
                 }
             }
             catch (Exception err)
