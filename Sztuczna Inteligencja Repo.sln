@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29326.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "List01Zadanie_01", "List01Zadanie_01\List01Zadanie_01.csproj", "{620351D7-A840-4319-9189-19AD1695F370}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "List02Zadanie1", "List02Zadanie1\List02Zadanie1.csproj", "{185CDD29-DBD4-42FC-B3FD-369DF9F9E1FD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FF0561D0-5239-4AF6-9A38-07B5405B6502}"
+	ProjectSection(SolutionItems) = preProject
+		List01Zadanie_01\.gitattributes = List01Zadanie_01\.gitattributes
+		List01Zadanie_01\.gitignore = List01Zadanie_01\.gitignore
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{620351D7-A840-4319-9189-19AD1695F370}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{620351D7-A840-4319-9189-19AD1695F370}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{620351D7-A840-4319-9189-19AD1695F370}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{620351D7-A840-4319-9189-19AD1695F370}.Release|Any CPU.Build.0 = Release|Any CPU
+		{185CDD29-DBD4-42FC-B3FD-369DF9F9E1FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{185CDD29-DBD4-42FC-B3FD-369DF9F9E1FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{185CDD29-DBD4-42FC-B3FD-369DF9F9E1FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{185CDD29-DBD4-42FC-B3FD-369DF9F9E1FD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CC5ED8B7-F4F1-4C19-BEC9-C7B20F21336F}
+	EndGlobalSection
+EndGlobal
