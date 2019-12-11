@@ -14,12 +14,12 @@ namespace List02Zadanie1
 
         private static void DrawChessBoard(string permutation)
         {
-            for (int i = 1; i <= permutation.Length; i++)
+            for (int i = 0; i < permutation.Length; i++)
             {
-                for (int j = 1; j <= permutation.Length; j++)
+                for (int j = 0; j < permutation.Length; j++)
                 {
-                    int numericValue = (int)char.GetNumericValue(permutation[i - 1]);
-                    Console.Write(numericValue == j ? " X " : " 0 ");
+                    int numericValue = (int)char.GetNumericValue(permutation[j]);
+                    Console.Write(numericValue == i ? " X " : " 0 ");
                 }
                 Console.WriteLine();
             }
@@ -33,9 +33,9 @@ namespace List02Zadanie1
 
         private static bool CheckSolution(string permutation)
         {
-            for (int i = 1; i < permutation.Length; i++)
+            for (int i = 0; i < permutation.Length; i++)
             {
-                for (int m = i + 1; m <= permutation.Length; m++)
+                for (int m = i + 1; m < permutation.Length; m++)
                 {
                     /*check if they stay in the same line
                      *
@@ -47,11 +47,11 @@ namespace List02Zadanie1
                     if (i == m) return false;
 
                     //check for same row
-                    else if (permutation[i - 1] == permutation[m - 1]) return false;
+                    else if (permutation[i] == permutation[m]) return false;
 
                     //check for same diagonal
-                    int x = (int)char.GetNumericValue(permutation[i - 1]);
-                    int y = (int)char.GetNumericValue(permutation[m - 1]);
+                    int x = (int)char.GetNumericValue(permutation[i]);
+                    int y = (int)char.GetNumericValue(permutation[m]);
                     if (Math.Abs(x - y) == Math.Abs(i - m))
                         return false;
                 }
@@ -101,7 +101,7 @@ namespace List02Zadanie1
             List<int> listOfDigits = new List<int>();
             for (int i = 0; i < numberOfDigits; i++)
             {
-                int nextRandom = rnd.Next(numberOfDigits) + 1;
+                int nextRandom = rnd.Next(numberOfDigits);
                 listOfDigits.Add(nextRandom);
             }
 
@@ -112,7 +112,7 @@ namespace List02Zadanie1
         private static List<int> Generate(int numberOfDigits)
         {
             List<int> listOfDigits = new List<int>();
-            for (int i = 1; i <= numberOfDigits; i++)
+            for (int i = 0; i < numberOfDigits; i++)
             {
                 listOfDigits.Add(i);
             }
@@ -142,26 +142,13 @@ namespace List02Zadanie1
             }
         }
 
-        private static int[] IntegerToArray(int n)
-        {
-            if (n == 0) return new int[1] { 0 };
-
-            var digits = new List<int>();
-
-            for (; n != 0; n /= 10)
-                digits.Add(n % 10);
-
-            var arr = digits.ToArray();
-            Array.Reverse(arr);
-            return arr;
-        }
-
         private static void Main(string[] args)
         {
             try
             {
                 //Variables
                 // Start point of the App
+
                 Console.Write("Please type number of digits to proceed permutation: ");
                 string inputString = Console.ReadLine();
                 int numberOfDigits = int.Parse(inputString ?? throw new InvalidOperationException());
@@ -207,20 +194,51 @@ namespace List02Zadanie1
                             List<string> listOfAllPermutations = CreateAllPermutationsOnLastOne(listOfDigits);
                             watch.Stop();
                             float elapsedMs = watch.ElapsedMilliseconds;
+                            
                             Console.WriteLine($"Created {listOfAllPermutations.Count} permutations in {elapsedMs / 1000} sec.\n");
-                            Console.Write($"Dou You want to see them? Y/N \n");
+                            Console.Write($"Dou You want to see them? Y/N");
+                           
                             selector = Console.ReadKey().KeyChar;
+
                             if (selector == 'y')
+                            {
                                 Write(listOfAllPermutations);
-                            Console.WriteLine();
+                                Console.WriteLine();
+                            }
+                            else Console.WriteLine();
+
 
                             List<string> solutions = listOfAllPermutations.Where(CheckSolution).ToList();
-                            foreach (string sol in solutions)
-                            {
-                                DrawChessBoard(sol);
-                                Console.WriteLine('\n');
-                            }
+
                             Console.WriteLine($"Found {solutions.Count} solutions to {numberOfDigits} queens problem.\n");
+                            if (solutions.Count > 0)
+                            {
+                                Console.Write($"Dou You want to see them? Y/N");
+
+                                selector = Console.ReadKey().KeyChar;
+                                if (selector == 'y')
+                                {
+                                    Write(solutions);
+
+                                }
+                                Console.WriteLine();
+
+                                Console.Write($"Dou You want to see chessboards? Y/N");
+
+                                selector = Console.ReadKey().KeyChar;
+                                if (selector == 'y')
+                                {
+                                    foreach (string sol in solutions)
+                                    {
+                                        Console.WriteLine(sol);
+                                        DrawChessBoard(sol);
+                                        Console.WriteLine('\n');
+                                    }
+                                }
+                            }
+                            Console.WriteLine();
+                            
+                           
                             break;
                         }
                 }
