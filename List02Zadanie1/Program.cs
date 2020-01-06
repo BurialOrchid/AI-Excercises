@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace List02Zadanie1
+namespace Exercise02
 {
     internal static class Program
     {
@@ -142,7 +142,7 @@ namespace List02Zadanie1
             }
         }
 
-        private static void Main(string[] args)
+        private static void Main()
         {
             try
             {
@@ -194,10 +194,10 @@ namespace List02Zadanie1
                             List<string> listOfAllPermutations = CreateAllPermutationsOnLastOne(listOfDigits);
                             watch.Stop();
                             float elapsedMs = watch.ElapsedMilliseconds;
-                            
+
                             Console.WriteLine($"Created {listOfAllPermutations.Count} permutations in {elapsedMs / 1000} sec.\n");
                             Console.Write($"Dou You want to see them? Y/N");
-                           
+
                             selector = Console.ReadKey().KeyChar;
 
                             if (selector == 'y')
@@ -206,7 +206,6 @@ namespace List02Zadanie1
                                 Console.WriteLine();
                             }
                             else Console.WriteLine();
-
 
                             List<string> solutions = listOfAllPermutations.Where(CheckSolution).ToList();
 
@@ -219,13 +218,13 @@ namespace List02Zadanie1
                                 if (selector == 'y')
                                 {
                                     Write(solutions);
-
                                 }
                                 Console.WriteLine();
 
                                 Console.Write($"Dou You want to see chessboards? Y/N");
 
                                 selector = Console.ReadKey().KeyChar;
+                                Console.WriteLine();
                                 if (selector == 'y')
                                 {
                                     foreach (string sol in solutions)
@@ -237,8 +236,7 @@ namespace List02Zadanie1
                                 }
                             }
                             Console.WriteLine();
-                            
-                           
+
                             break;
                         }
                 }

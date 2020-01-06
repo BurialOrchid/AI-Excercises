@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace List01Zadanie_01
+namespace Exercise01
 {
     internal static class Program
     {
@@ -12,7 +12,7 @@ namespace List01Zadanie_01
             List<int> listOfDigits = new List<int>();
             for (int i = 0; i < numberOfDigits; i++)
             {
-                int nextRandom = rnd.Next(numberOfDigits) + 1;
+                int nextRandom = rnd.Next(numberOfDigits);
                 listOfDigits.Add(nextRandom);
             }
 
@@ -23,7 +23,7 @@ namespace List01Zadanie_01
         private static List<int> Generate(int numberOfDigits)
         {
             List<int> listOfDigits = new List<int>();
-            for (int i = 1; i <= numberOfDigits; i++)
+            for (int i = 0; i < numberOfDigits; i++)
             {
                 listOfDigits.Add(i);
             }
@@ -53,7 +53,7 @@ namespace List01Zadanie_01
             }
         }
 
-        private static List<string> CreateAllPermutationsOnLastOne(List<int> listOfDigits)
+        private static List<string> CreatePermutationsSwap(List<int> listOfDigits)
         {
             string permutation = listOfDigits.Aggregate("", (current, i) => current + i.ToString());
             List<string> allPermutationsList = new List<string>();
@@ -65,7 +65,7 @@ namespace List01Zadanie_01
 
         private static void Permute(string str, int l, int r, List<string> a)
         {
-            if (l == r)
+            if (l == r && !a.Contains(str))
                 a.Add(str);
             else
             {
@@ -88,7 +88,7 @@ namespace List01Zadanie_01
             return s;
         }
 
-        private static List<string> CreateAllPermutations(List<int> listOfDigits)
+        private static List<string> CreatePermutationsInsert(List<int> listOfDigits)
         {
             //
             // This is main part of the program - Algorithm
@@ -125,9 +125,12 @@ namespace List01Zadanie_01
         {
             //Variables
             // Start point of the App
+
             Console.Write("Please type number of digits to proceed permutation: ");
+
             string inputString = Console.ReadLine();
             int numberOfDigits = int.Parse(inputString ?? throw new InvalidOperationException());
+
             Console.Write($"You select: {numberOfDigits} numbers\n");
             Console.Write($"Select generator method:\n 1. Generate sequential numbers\n 2. Generate random numbers\n");
             char selector = Console.ReadKey().KeyChar;
@@ -167,24 +170,39 @@ namespace List01Zadanie_01
 
                     default:
                         {
+                            Console.Write(
+                                $"Select permutation method:\n 1. Switch two digits \n 2. Insert next digit to array\n");
+                            char selector2 = Console.ReadKey().KeyChar;
                             Console.WriteLine($"\n Im working... It may take a while...\n");
-                            //var watch = System.Diagnostics.Stopwatch.StartNew();
-                            // List<string> permutations = CreateAllPermutations(listOfDigits);
-                            //watch.Stop();
-                            //float elapsedMs = watch.ElapsedMilliseconds;
-                            //Console.WriteLine($"Created permutations in {elapsedMs / 1000} sec.\n\n");
-
                             var watch = System.Diagnostics.Stopwatch.StartNew();
-                            List<string> permutations = CreateAllPermutationsOnLastOne(listOfDigits);
+                            List<string> permutations = null;
+                            switch (selector2)
+                            {
+                                case '1':
+
+                                    permutations = CreatePermutationsSwap(listOfDigits);
+                                    break;
+
+                                case '2':
+
+                                    permutations = CreatePermutationsInsert(listOfDigits);
+                                    break;
+
+                                default:
+                                    throw new Exception(" Next time press 1 or 2 on keyboard");
+                            }
+
                             watch.Stop();
                             float elapsedMs = watch.ElapsedMilliseconds;
-                            Console.WriteLine($"Created permutations in {elapsedMs / 1000} sec.\n");
+                            if (permutations != null)
+                            {
+                                Console.WriteLine($"Created permutations in {elapsedMs / 1000} sec.\n");
 
-                            Console.Write($"Dou You want to see them? Y/N \n");
-                            selector = Console.ReadKey().KeyChar;
-                            if (selector == 'y')
-                                Write(permutations);
-
+                                Console.Write($"Dou You want to see them? Y/N \n");
+                                selector = Console.ReadKey().KeyChar;
+                                if (selector == 'y')
+                                    Write(permutations);
+                            }
                             break;
                         }
                 }

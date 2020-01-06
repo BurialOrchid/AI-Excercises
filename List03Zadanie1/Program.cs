@@ -1,14 +1,41 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace List03Zadanie1
+namespace Exercise03
 {
-    class Program
+    internal class Program
     {
-        private static int[] CreatePermutation(int[] state)
+        private static int[] CreatePermutation(int numOfDigits, ref int numOfStates)
         {
+            List<int> sol = new List<int>();
+            while (sol.Count < numOfDigits)
+            {
+                sol.Add(0);
+                numOfStates++;
+                while (!CheckSolution(sol.ToArray()))
+                {
+                    while (sol.ElementAt(sol.Count - 1) >= numOfDigits - 1)
+                    {
+                        sol.RemoveAt(sol.Count - 1);
+                    }
+                    if (sol.Count == 0)
+                        return null;
+                    else
+                        sol[^1]++;
+                    numOfStates++;
+                }
 
+                foreach (var t in sol)
+                {
+                    Console.Write(t);
+                }
+
+                Console.WriteLine();
+            }
+
+            return CheckSolution(sol.ToArray()) ? sol.ToArray() : null;
         }
-
 
         private static bool CheckSolution(int[] permutation)
         {
@@ -38,12 +65,22 @@ namespace List03Zadanie1
             return true;
         }
 
+        private static void DrawChessBoard(int[] permutation)
+        {
+            for (int i = 0; i < permutation.Length; i++)
+            {
+                foreach (var numericValue in permutation)
+                {
+                    Console.Write(numericValue == i ? " X " : " 0 ");
+                }
+                Console.WriteLine();
+            }
+        }
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             try
             {
-                Console.WriteLine("Hello World!");
                 Console.Write("Please type number of digits to proceed permutation: ");
 
                 string inputString = Console.ReadLine();
@@ -51,19 +88,26 @@ namespace List03Zadanie1
                 Console.Write($"You select: {numberOfDigits} numbers\n");
 
                 int[] solution = new int[numberOfDigits];
-
-                var watch = System.Diagnostics.Stopwatch.StartNew();               
-                solution = CreatePermutation(solution);
+                int numOfStates = 0;
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                solution = CreatePermutation(numberOfDigits, ref numOfStates);
                 watch.Stop();
                 float elapsedMs = watch.ElapsedMilliseconds;
 
                 Console.WriteLine($"Found solution in {elapsedMs / 1000} sec.\n");
                 Console.Write($"Solution is: ");
 
-                for (int i = 0; i < solution.Length; i++)
+                foreach (var t in solution)
                 {
-                    Console.Write($"{i}");
+                    Console.Write($"{t}");
                 }
+
+                Console.WriteLine();
+
+                Console.WriteLine($"Searched through {numOfStates} number of states");
+
+                Console.WriteLine();
+                DrawChessBoard(solution);
             }
             catch (Exception e)
             {
