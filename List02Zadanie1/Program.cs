@@ -16,11 +16,11 @@ namespace Exercise02
         {
             for (int i = 0; i < permutation.Length; i++)
             {
-                for (int j = 0; j < permutation.Length; j++)
+                foreach (int numericValue in permutation.Select(t => (int)char.GetNumericValue(t)))
                 {
-                    int numericValue = (int)char.GetNumericValue(permutation[j]);
                     Console.Write(numericValue == i ? " X " : " 0 ");
                 }
+
                 Console.WriteLine();
             }
         }
@@ -196,8 +196,8 @@ namespace Exercise02
                             float elapsedMs = watch.ElapsedMilliseconds;
 
                             Console.WriteLine($"Created {listOfAllPermutations.Count} permutations in {elapsedMs / 1000} sec.\n");
-                            Console.Write($"Dou You want to see them? Y/N");
-
+                            Console.Write($"Do You want to see them? Y/N");
+                           
                             selector = Console.ReadKey().KeyChar;
 
                             if (selector == 'y')
@@ -221,7 +221,7 @@ namespace Exercise02
                                 }
                                 Console.WriteLine();
 
-                                Console.Write($"Dou You want to see chessboards? Y/N");
+                                Console.Write($"\nDo You want to see chessboards? Y/N");
 
                                 selector = Console.ReadKey().KeyChar;
                                 Console.WriteLine();

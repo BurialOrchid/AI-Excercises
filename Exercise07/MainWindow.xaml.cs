@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Exercise07
 {
@@ -12,18 +13,24 @@ namespace Exercise07
     {
         public MainWindow()
         {
+            PointsAI = 0;
+            PointsHuman = 0;
+
             InitializeComponent();
+            DataContext = this;
+            sth();
         }
 
-        private bool _turn;
+        public int PointsAI { get; set; }
+        public int PointsHuman { get; set; }
+        public bool Turn { get; set; }
 
-        public bool Turn
+
+        private void sth()
         {
-            get { return _turn; }
-            set { _turn = value; }
+          
         }
-
-        private bool CheckIfWinning(char player)
+        private int CheckIfWinning(char player)
         {
             char[,] board = new char[3, 3] { { 'a', 'a', 'a' }, { 'a', 'a', 'a' }, { 'a', 'a', 'a' } };
             if (Button1.Content != null)
@@ -46,38 +53,69 @@ namespace Exercise07
                 board[2, 2] = (char)Button9.Content;
 
             //check rows
-            if (board[0, 0] == player && board[0, 1] == player && board[0, 2] == player) { return true; }
-            if (board[1, 0] == player && board[1, 1] == player && board[1, 2] == player) { return true; }
-            if (board[2, 0] == player && board[2, 1] == player && board[2, 2] == player) { return true; }
+            if (board[0, 0] == player && board[0, 1] == player && board[0, 2] == player) { return 1; }
+            if (board[1, 0] == player && board[1, 1] == player && board[1, 2] == player) { return 1; }
+            if (board[2, 0] == player && board[2, 1] == player && board[2, 2] == player) { return 1; }
 
             // check columns
-            if (board[0, 0] == player && board[1, 0] == player && board[2, 0] == player) { return true; }
-            if (board[0, 1] == player && board[1, 1] == player && board[2, 1] == player) { return true; }
-            if (board[0, 2] == player && board[1, 2] == player && board[2, 2] == player) { return true; }
+            if (board[0, 0] == player && board[1, 0] == player && board[2, 0] == player) { return 1; }
+            if (board[0, 1] == player && board[1, 1] == player && board[2, 1] == player) { return 1; }
+            if (board[0, 2] == player && board[1, 2] == player && board[2, 2] == player) { return 1; }
 
             // check diags
-            if (board[0, 0] == player && board[1, 1] == player && board[2, 2] == player) { return true; }
-            if (board[0, 2] == player && board[1, 1] == player && board[2, 0] == player) { return true; }
+            if (board[0, 0] == player && board[1, 1] == player && board[2, 2] == player) { return 1; }
+            if (board[0, 2] == player && board[1, 1] == player && board[2, 0] == player) { return 1; }
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    if (board[j, i] == 'a') return -1;
+                }
+            }
+            return 0;
 
-            return false;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+
             Turn = !Turn;
+            PlayerNameLabel.Content = Turn ? "AI's turn" : "Player's turn";
             Button button = sender as Button;
             switch (Turn)
             {
+
                 case true:
                     button.Content = 'X';
                     button.IsEnabled = false;
-                    if (CheckIfWinning('X')) MessageBox.Show($"Won player X", "GAME OVER");
+                    if (CheckIfWinning('X') == 1)
+                    {
+                        this.PointsHuman++;
+                        MessageBox.Show($"HUMAN WON", "GAME OVER");
+                        foreach (Button item in PlayGrid.Children)
+                        {
+                            item.IsEnabled = false;
+                        }
+                    };
+
+                    if (CheckIfWinning('X') == 0) MessageBox.Show($"TIE", "GAME OVER");
+
                     break;
 
                 case false:
                     button.Content = 'O';
                     button.IsEnabled = false;
-                    if (CheckIfWinning('O')) MessageBox.Show($"Won player O", "GAME OVER"); ;
+                    if (CheckIfWinning('O') == 1)
+                    {
+                        this.PointsAI++;
+                        MessageBox.Show($"AI WON", "GAME OVER");
+                        foreach (Button item in PlayGrid.Children)
+                        {
+                            item.IsEnabled = false;
+                        }
+                    }
+                    if (CheckIfWinning('O') == 0) MessageBox.Show($"TIE", "GAME OVER");
+
                     break;
             }
         }
