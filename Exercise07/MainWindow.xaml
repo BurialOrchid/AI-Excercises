@@ -31,9 +31,9 @@
         </Grid>
         <Button Content="Restart Game" HorizontalAlignment="Left" Height="55" Margin="494,67,0,0" VerticalAlignment="Top" Width="200" Click="Restart_Click" />
         <Label x:Name="PlayerNameLabel" Content="Player's turn" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="49" Margin="494,157,0,0" VerticalAlignment="Top" Width="200" FontSize="25" />
-        <Label x:Name="HumanScoreLabel" Content="Player's points:" HorizontalAlignment="Left" Margin="423,323,0,0" VerticalAlignment="Top" Width="137" FontSize="20"/>
-        <Label x:Name="HumanScoreValue" Content="{Binding PointsHuman}"  HorizontalAlignment="Left" Margin="565,323,0,0" VerticalAlignment="Top" Width="63" FontSize="20" Height="36.6"/>
-        <Label x:Name="AIScoreLabel" Content="Player's points:" HorizontalAlignment="Left" Margin="423,267,0,0" VerticalAlignment="Top" Width="137" FontSize="20"/>
-        <Label x:Name="AIScoreValue" Content="{Binding PointsAI}"  HorizontalAlignment="Left" Margin="565,267,0,0" VerticalAlignment="Top" Width="63" FontSize="20" Height="36.6"/>
+        <Label x:Name="HumanScoreLabel" Content="Player's points:" HorizontalAlignment="Left" Margin="423,323,0,0" VerticalAlignment="Top" Width="137" FontSize="20" />
+        <Label x:Name="HumanScoreValue" Content="0"  HorizontalAlignment="Left" Margin="565,323,0,0" VerticalAlignment="Top" Width="63" FontSize="20" Height="36.6" />
+        <Label x:Name="AIScoreLabel" Content="AI's points:" HorizontalAlignment="Left" Margin="423,267,0,0" VerticalAlignment="Top" Width="137" FontSize="20" />
+        <Label x:Name="AIScoreValue" Content="0"  HorizontalAlignment="Left" Margin="565,267,0,0" VerticalAlignment="Top" Width="63" FontSize="20" Height="36.6" />
     </Grid>
 </Window>
