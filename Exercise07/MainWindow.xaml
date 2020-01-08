@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Exercise07"
         mc:Ignorable="d"
-        Title="TIC TAC TOE WITH MINIMAX" Height="450" Width="800">
-    <Grid>
-        <Label x:Name="GameLabel" Content="Tic Tac Toe with MiniMax" HorizontalAlignment="Center" Height="50" HorizontalContentAlignment="Center" VerticalAlignment="Top" Width="300" FontSize="25" />
-        <Grid x:Name="PlayGrid" Height="300" Width="300" Margin="62,67,438,67" HorizontalAlignment="Center" VerticalAlignment="Center">
+        Title="TIC TAC TOE WITH MINIMAX" Height="800" Width="450">
+    <Grid Height="780">
+        <Label x:Name="GameLabel" Content="Tic Tac Toe with MiniMax" HorizontalAlignment="Left" Height="50" Margin="75,20,0,0" HorizontalContentAlignment="Center" VerticalAlignment="Top" Width="300" FontSize="25" />
+        <Grid x:Name="PlayGrid" Height="300" Width="300" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="75,100,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -29,11 +29,10 @@
             <Button x:Name="Button8" Style="{StaticResource MyButton}" Grid.Column="1" Grid.Row="2" Click="Button_Click" />
             <Button x:Name="Button9" Style="{StaticResource MyButton}" Grid.Column="2" Grid.Row="2" Click="Button_Click" />
         </Grid>
-        <Button Content="Restart Game" HorizontalAlignment="Left" Height="55" Margin="494,67,0,0" VerticalAlignment="Top" Width="200" Click="Restart_Click" />
-        <Label x:Name="PlayerNameLabel" Content="Player's turn" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="49" Margin="494,157,0,0" VerticalAlignment="Top" Width="200" FontSize="25" />
-        <Label x:Name="HumanScoreLabel" Content="Player's points:" HorizontalAlignment="Left" Margin="423,323,0,0" VerticalAlignment="Top" Width="137" FontSize="20" />
-        <Label x:Name="HumanScoreValue" Content="0"  HorizontalAlignment="Left" Margin="565,323,0,0" VerticalAlignment="Top" Width="63" FontSize="20" Height="36.6" />
-        <Label x:Name="AIScoreLabel" Content="AI's points:" HorizontalAlignment="Left" Margin="423,267,0,0" VerticalAlignment="Top" Width="137" FontSize="20" />
-        <Label x:Name="AIScoreValue" Content="0"  HorizontalAlignment="Left" Margin="565,267,0,0" VerticalAlignment="Top" Width="63" FontSize="20" Height="36.6" />
+        <Button Content="Restart Game" Height="55" Width="300" Margin="75,405,75,320" Click="Restart_Click" />
+        <Label x:Name="HumanScoreLabel" Content="Player's points:" FontSize="30" Margin="36,500,-36,-500" />
+        <Label x:Name="HumanScoreValue" Content="0" FontSize="35"  FontWeight="Normal" Margin="286,495,-286,-495" />
+        <Label x:Name="AIScoreLabel" Content="AI's points:" FontSize="30" Margin="36,611,-36,-611" />
+        <Label x:Name="AIScoreValue" Content="0" FontSize="35" Margin="286,606,-286,-606" />
     </Grid>
 </Window>
