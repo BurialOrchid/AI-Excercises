@@ -24,7 +24,7 @@ namespace Exercise07
             Board = new char[3, 3] { { ' ', ' ', ' ' }, { ' ', ' ', ' ' }, { ' ', ' ', ' ' } };
 
             InitializeComponent();
-            AIsTurn();
+
         }
 
         public char ai = 'X';
@@ -63,13 +63,16 @@ namespace Exercise07
                 default: break;
             }
             DisableButtons();
-            DebugBoard();
+            // DebugBoard();
         }
 
         private void AIsTurn()
         {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             DoBestMove();
-
+            watch.Stop();
+            double elapsedMs = watch.ElapsedTicks;
+            Debug.Write(elapsedMs.ToString()+" ");
             if (Board[0, 0] == ai) Button1.Content = ai;
             if (Board[0, 1] == ai) Button2.Content = ai;
             if (Board[0, 2] == ai) Button3.Content = ai;
@@ -80,13 +83,15 @@ namespace Exercise07
             if (Board[2, 1] == ai) Button8.Content = ai;
             if (Board[2, 2] == ai) Button9.Content = ai;
             DisableButtons();
-            DebugBoard();
+            // DebugBoard();
         }
 
         private void DoBestMove()
         {
             int bestScore = -int.MaxValue;
-            Move move = new Move();
+            int ii = -1;
+            int jj = -1;
+
 
             for (int i = 0; i < 3; i++)
             {
@@ -95,22 +100,25 @@ namespace Exercise07
                     if (Board[i, j] == ' ')
                     {
                         Board[i, j] = ai;
-                        int score = MiniMax(Board, 0, false);
+                        int score = MiniMax(Board, 0, -int.MaxValue, int.MaxValue, false);
                         Board[i, j] = ' ';
                         if (score > bestScore)
                         {
                             bestScore = score;
-                            move.i = i;
-                            move.j = j;
+                            ii = i;
+                            jj = j;
                         }
                     }
                 }
             }
-            Board[move.i, move.j] = ai;
+            Board[ii, jj] = ai;
         }
 
-        private int MiniMax(char[,] board, int depth, bool isMaximizing)
+        private int MiniMax(char[,] board, int depth, int alpha, int beta, bool isMaximizing)
         {
+
+            int value = CheckIfWinning(board);
+            if (value != 0) return value;
             if (!IsMovesLeft(board))
             {
                 return CheckIfWinning(board);
@@ -125,9 +133,12 @@ namespace Exercise07
                         if (board[i, j] == ' ')
                         {
                             board[i, j] = ai;
-                            int score = MiniMax(board, depth + 1, false);
+                            int score = MiniMax(board, depth + 1, alpha, beta, false);
                             board[i, j] = ' ';
                             bestScore = Math.Max(bestScore, score);
+                            alpha = Math.Max(alpha, score);
+                            if (beta <= alpha)
+                                break;
                         }
                     }
                 }
@@ -144,9 +155,12 @@ namespace Exercise07
                         if (board[i, j] == ' ')
                         {
                             board[i, j] = player;
-                            int score = MiniMax(board, depth + 1, true);
+                            int score = MiniMax(board, depth + 1, alpha, beta, true);
                             board[i, j] = ' ';
                             bestScore = Math.Min(bestScore, score);
+                            beta = Math.Min(beta, score);
+                            if (beta <= alpha)
+                                break;
                         }
                     }
                 }

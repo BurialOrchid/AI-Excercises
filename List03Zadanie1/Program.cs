@@ -6,32 +6,48 @@ namespace Exercise03
 {
     internal class Program
     {
+        private static void PrintSol(List<int> sol)
+        {
+            foreach (var t in sol)
+                {
+                    Console.Write(t);
+                }
+                Console.WriteLine();
+        }
+
         private static int[] CreatePermutation(int numOfDigits, ref int numOfStates)
         {
             List<int> sol = new List<int>();
             while (sol.Count < numOfDigits)
             {
                 sol.Add(0);
+
+                PrintSol(sol);
+
                 numOfStates++;
                 while (!CheckSolution(sol.ToArray()))
                 {
                     while (sol.ElementAt(sol.Count - 1) >= numOfDigits - 1)
                     {
                         sol.RemoveAt(sol.Count - 1);
+                        PrintSol(sol);
+
                     }
                     if (sol.Count == 0)
                         return null;
                     else
+                    {
                         sol[^1]++;
+
+                        PrintSol(sol);
+
+                    }
                     numOfStates++;
                 }
 
-                foreach (var t in sol)
-                {
-                    Console.Write(t);
-                }
 
-                Console.WriteLine();
+
+
             }
 
             return CheckSolution(sol.ToArray()) ? sol.ToArray() : null;

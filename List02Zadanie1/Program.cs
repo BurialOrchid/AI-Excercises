@@ -37,17 +37,6 @@ namespace Exercise02
             {
                 for (int m = i + 1; m < permutation.Length; m++)
                 {
-                    /*check if they stay in the same line
-                     *
-                     * permutation[i] same as letter 'j' on wiki
-                     * permutation[m] same as letter 'n' on wiki
-                    */
-
-                    //check for same column
-                    if (i == m) return false;
-
-                    //check for same row
-                    else if (permutation[i] == permutation[m]) return false;
 
                     //check for same diagonal
                     int x = (int)char.GetNumericValue(permutation[i]);
