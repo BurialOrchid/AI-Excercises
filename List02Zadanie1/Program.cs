@@ -37,7 +37,6 @@ namespace Exercise02
             {
                 for (int m = i + 1; m < permutation.Length; m++)
                 {
-
                     //check for same diagonal
                     int x = (int)char.GetNumericValue(permutation[i]);
                     int y = (int)char.GetNumericValue(permutation[m]);
@@ -84,20 +83,6 @@ namespace Exercise02
             return s;
         }
 
-        private static List<int> GenerateWithDuplicates(int numberOfDigits)
-        {
-            Random rnd = new Random();
-            List<int> listOfDigits = new List<int>();
-            for (int i = 0; i < numberOfDigits; i++)
-            {
-                int nextRandom = rnd.Next(numberOfDigits);
-                listOfDigits.Add(nextRandom);
-            }
-
-            Console.WriteLine();
-            return listOfDigits;
-        }
-
         private static List<int> Generate(int numberOfDigits)
         {
             List<int> listOfDigits = new List<int>();
@@ -142,30 +127,15 @@ namespace Exercise02
                 string inputString = Console.ReadLine();
                 int numberOfDigits = int.Parse(inputString ?? throw new InvalidOperationException());
                 Console.Write($"You select: {numberOfDigits} numbers\n");
-                Console.Write($"Select generator method:\n 1. Generate sequential numbers\n 2. Generate random numbers\n");
-                char selector = Console.ReadKey().KeyChar;
+
+                char selector;
 
                 List<int> listOfDigits;
-                switch (selector)
-                {
-                    case '1':
-                        listOfDigits = Generate(numberOfDigits);
-                        Console.Write($"Your numbers are: ");
-                        Write(listOfDigits);
-                        Console.WriteLine();
-                        break;
 
-                    case '2':
-                        listOfDigits = GenerateWithDuplicates(numberOfDigits);
-                        Console.Write($"Your numbers are: ");
-                        Write(listOfDigits);
-                        Console.WriteLine();
-                        break;
-
-                    default:
-                        listOfDigits = null;
-                        throw new Exception(" Next time press 1 or 2 on keyboard");
-                }
+                listOfDigits = Generate(numberOfDigits);
+                Console.Write($"Your numbers are: ");
+                Write(listOfDigits);
+                Console.WriteLine();
 
                 switch (numberOfDigits)
                 {
@@ -186,7 +156,7 @@ namespace Exercise02
 
                             Console.WriteLine($"Created {listOfAllPermutations.Count} permutations in {elapsedMs / 1000} sec.\n");
                             Console.Write($"Do You want to see them? Y/N");
-                           
+
                             selector = Console.ReadKey().KeyChar;
 
                             if (selector == 'y')

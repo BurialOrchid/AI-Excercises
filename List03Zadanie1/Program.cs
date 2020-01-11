@@ -9,10 +9,10 @@ namespace Exercise03
         private static void PrintSol(List<int> sol)
         {
             foreach (var t in sol)
-                {
-                    Console.Write(t);
-                }
-                Console.WriteLine();
+            {
+                Console.Write(t);
+            }
+            Console.WriteLine();
         }
 
         private static int[] CreatePermutation(int numOfDigits, ref int numOfStates)
@@ -31,7 +31,6 @@ namespace Exercise03
                     {
                         sol.RemoveAt(sol.Count - 1);
                         PrintSol(sol);
-
                     }
                     if (sol.Count == 0)
                         return null;
@@ -40,14 +39,9 @@ namespace Exercise03
                         sol[^1]++;
 
                         PrintSol(sol);
-
                     }
                     numOfStates++;
                 }
-
-
-
-
             }
 
             return CheckSolution(sol.ToArray()) ? sol.ToArray() : null;
@@ -59,21 +53,8 @@ namespace Exercise03
             {
                 for (int m = i + 1; m < permutation.Length; m++)
                 {
-                    /*check if they stay in the same line
-                     *
-                     * permutation[i] same as letter 'j' on wiki
-                     * permutation[m] same as letter 'n' on wiki
-                    */
-
-                    //check for same column
-                    if (i == m) return false;
-
-                    //check for same row
-                    else if (permutation[i] == permutation[m]) return false;
-
-                    //check for same diagonal
-                    if (Math.Abs(permutation[i] - permutation[m]) == Math.Abs(i - m))
-                        return false;
+                    //check for same row and diagonal
+                    if (permutation[i] == permutation[m] || Math.Abs(permutation[i] - permutation[m]) == Math.Abs(i - m)) return false;
                 }
             }
 

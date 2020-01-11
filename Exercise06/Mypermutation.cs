@@ -1,0 +1,55 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Exercise06
+{
+    internal class Mypermutation
+    {
+        public int[] permutation;
+        public int permutationLength;
+        public int utility;
+
+        public Mypermutation(int size)
+        {
+            permutationLength = size;
+            List<int> permutation = new List<int>();
+            Random rnd = new Random();
+            do
+            {
+                int nextrnd = rnd.Next(0, permutationLength);
+                permutation.Add(nextrnd);
+                //if (!permutation.Contains(nextrnd)) permutation.Add(nextrnd);
+            } while (permutation.Count < permutationLength);
+            this.permutation = permutation.ToArray();
+
+            CalculateUtility();
+        }
+
+        override public string ToString()
+        {
+            string output = "";
+
+            for (int i = 0; i < permutationLength; i++)
+            {
+                output += permutation[i].ToString();
+            }
+
+            return output;
+        }
+
+        public void CalculateUtility()
+        {
+            int notattacked = 0; ;
+            for (int i = 0; i < permutationLength; i++)
+            {
+                for (int m = i + 1; m < permutationLength; m++)
+                {
+                    //check for same row and diagonal
+                    if (!(permutation[i] == permutation[m] || Math.Abs(permutation[i] - permutation[m]) == Math.Abs(i - m))) notattacked++;
+                }
+            }
+            utility = notattacked;
+        }
+    }
+}
