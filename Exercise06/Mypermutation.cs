@@ -9,12 +9,20 @@ namespace Exercise06
         public int[] permutation;
         public int permutationLength;
         public int utility;
+        private readonly Random rnd;
 
+        public Mypermutation(Mypermutation item)
+        {
+            this.permutation = item.permutation;
+            this.permutationLength = item.permutationLength;
+            this.utility = item.utility;
+            rnd = new Random();
+        }
         public Mypermutation(int size)
         {
             permutationLength = size;
             List<int> permutation = new List<int>();
-            Random rnd = new Random();
+            rnd = new Random();
             do
             {
                 int nextrnd = rnd.Next(0, permutationLength);
