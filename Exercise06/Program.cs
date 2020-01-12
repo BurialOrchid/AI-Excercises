@@ -35,7 +35,7 @@ namespace Exercise06
         private static void Main(string[] args)
         {
             int permutationLength = 8;
-            int populationsize = 10;
+            int populationsize = 30;
             bool foundSolution = false;
             int generation = 1;
             int solutionindex = -1;
@@ -46,7 +46,9 @@ namespace Exercise06
             // populationsize = Convert.ToInt32(Console.ReadLine());
             // Console.WriteLine();
 
+
             Population population = new Population(permutationLength, populationsize);
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             while (!foundSolution)
             {
                 for (int i = 0; i < population.populationSize; i++)
@@ -65,14 +67,17 @@ namespace Exercise06
                     generation++;
                 }
             }
+            watch.Stop();
+            float elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine($"Found solution in {elapsedMs} ms.");
             Console.WriteLine($"Found solution in {generation} generation.");
             Console.Write($"Solution is: ");
             for (int i = 0; i < permutationLength; i++)
             {
                 Console.Write(population.populationarray[solutionindex].permutation[i]);
             }
-            Console.WriteLine();
-            Console.WriteLine($"Drawing chessboard...\n");
+            Console.WriteLine("\n");
+            Console.WriteLine($"Drawing chessboard...");
             DrawChessBoard(population.populationarray[solutionindex].permutation);
 
         }
