@@ -40,12 +40,11 @@ namespace Exercise06
             int generation = 1;
             int solutionindex = -1;
 
-            // Console.Write("Select number of gueens to proceed Genetic algorithm solution : ");
-            // permutationLength = Convert.ToInt32(Console.ReadLine());
-            // Console.Write("Select population size : ");
-            // populationsize = Convert.ToInt32(Console.ReadLine());
-            // Console.WriteLine();
-
+            Console.Write("Select number of gueens to proceed Genetic algorithm solution : ");
+            permutationLength = Convert.ToInt32(Console.ReadLine());
+            Console.Write("Select population size : ");
+            populationsize = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine();
 
             Population population = new Population(permutationLength, populationsize);
             var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -79,7 +78,7 @@ namespace Exercise06
             Console.WriteLine("\n");
             Console.WriteLine($"Drawing chessboard...");
             DrawChessBoard(population.populationarray[solutionindex].permutation);
-
+            Console.ReadKey();
         }
     }
 }

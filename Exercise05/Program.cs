@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Exercise05
 {
-    class Program
+    internal class Program
     {
         private static void DrawChessBoard(int[] permutation)
         {
@@ -18,80 +19,125 @@ namespace Exercise05
             }
         }
 
-        static Mypermutation FindBestPermutation(Mypermutation input)
+        private static Mypermutation[] FindBestPermutation(Mypermutation input)
         {
+            //   Debug.WriteLine($"Input = {input.ToString()}");
             int bestutility = 0;
-            Mypermutation best = null;
+            List<Mypermutation> bestList = new List<Mypermutation>();
+            List<Mypermutation> toRemove = new List<Mypermutation>();
+
             for (int i = 0; i < input.permutationLength; i++)
             {
                 int moveUp = input.permutation[i];
-                int moveDown = input.permutationLength - input.permutation[i];
-                for (int j = 0; j < moveUp; j++)
+                int moveDown = input.permutationLength - input.permutation[i] - 1;
+                for (int j = 1; j <= moveUp; j++)
                 {
                     input.permutation[i] = input.permutation[i] - j;
+
                     input.CalculateUtility();
+                    //  Debug.WriteLine($"Column nr {i} muve u nr {j} = {input.ToString()} Utility: {input.utility}");
                     if (input.utility >= bestutility)
                     {
                         bestutility = input.utility;
-                        best = new Mypermutation(input);
+                        Mypermutation better = new Mypermutation(input);
+                        bestList.Add(better);
                     }
-                    input.permutation[i] = input.permutation[i] +j;
+                    input.permutation[i] = input.permutation[i] + j;
                 }
-                for (int k = 0; k < moveDown; k++)
+
+                for (int k = 1; k <= moveDown; k++)
                 {
                     input.permutation[i] = input.permutation[i] + k;
                     input.CalculateUtility();
+                    // Debug.WriteLine($"Column nr {i} muve d nr {k} = {input.ToString()} Utility: {input.utility}");
                     if (input.utility >= bestutility)
                     {
                         bestutility = input.utility;
-                        best = new Mypermutation(input);
+                        Mypermutation better = new Mypermutation(input);
+                        bestList.Add(better);
                     }
                     input.permutation[i] = input.permutation[i] - k;
                 }
             }
-            return best;
+            foreach (Mypermutation item in bestList)
+            {
+                if (item.utility < bestutility)
+                {
+                    toRemove.Add(item);
+                }
+            }
+
+            foreach (Mypermutation item in toRemove)
+            {
+                bestList.Remove(item);
+            }
+            // Debug.WriteLine($"Num of tables {bestList.Count} Utility: {bestutility}");
+
+            return bestList.ToArray();
         }
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
             int permutationLength = 8;
-            bool foundSolution = false;
-
             // Console.Write("Select number of gueens to proceed Genetic algorithm solution : ");
             // permutationLength = Convert.ToInt32(Console.ReadLine());
             // Console.WriteLine();
-            Mypermutation mypermutation = new Mypermutation(permutationLength);
-            int[] lasttenbest = new int[10];
-            int index = 0;
-            bool mybreak = false;
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-            for (int i = 0; i < 100; i++)
+            Mypermutation startPermutation = new Mypermutation(permutationLength);
+            Console.WriteLine($"Starting permutation is {startPermutation.ToString()} with utility {startPermutation.utility}");
+
+            Mypermutation[] listOfBest;
+            int bestUtility = 0;
+            int numofboards = 1;
+            bool found = false;
+            int numberOfTries = 10;
+            int bestPosibleUtility = startPermutation.bestutility;
+
+            Random rnd = new Random();
+            var watch = Stopwatch.StartNew();
+
+            listOfBest = FindBestPermutation(startPermutation);
+
+            if (bestUtility == bestPosibleUtility)
             {
-                Console.WriteLine($"For {i} permutation, utility is {mypermutation.utility}");
-                mypermutation = FindBestPermutation(mypermutation);
-                if (mypermutation.utility == 28) break;
-                lasttenbest[index] = mypermutation.utility;
-                for (int j = 0; j < 10; j++)
+                Console.WriteLine($"Found Soution {listOfBest[0].ToString()} Searched in {numofboards} tables");
+                found = true;
+            }
+            numberOfTries--;
+            bestUtility = listOfBest[0].utility;
+
+            while (bestUtility < bestPosibleUtility && numberOfTries >= 0)
+            {
+                bestUtility = listOfBest[0].utility;
+                int choice = rnd.Next(0, listOfBest.Length);
+                if (bestUtility == bestPosibleUtility)
                 {
-                    if (lasttenbest[j] != lasttenbest[0]) mybreak = true;
+                    Console.WriteLine($"Found Soution {listOfBest[0].ToString()} Searched in {numofboards} tables");
+                    found = true;
                     break;
                 }
-                if (mybreak) break;
-                index++;
-                if (index == 10) index = 0;
+                listOfBest = FindBestPermutation(listOfBest[choice]);
+                numofboards++;
+                numberOfTries--;
             }
 
             watch.Stop();
             float elapsedMs = watch.ElapsedMilliseconds;
-            Console.WriteLine($"Found solution in {elapsedMs} ms.");
-           
-            Console.Write($"Solution is: ");
-            for (int i = 0; i < mypermutation.permutationLength; i++)
+
+            if (found)
             {
-                Console.Write(mypermutation.permutation[i]);
+                Console.WriteLine($"Found solution in {elapsedMs} ms.");
+
+                Console.Write($"Solution is: {listOfBest[0].ToString()}");
+                Console.WriteLine("\n");
+                Console.WriteLine($"Drawing chessboard...");
+                DrawChessBoard(listOfBest[0].permutation);
             }
-            Console.WriteLine("\n");
-            Console.WriteLine($"Drawing chessboard...");
-            DrawChessBoard(mypermutation.permutation);
+            else
+            {
+                Console.WriteLine($"Didn't found solution, local minimum, or excided number of tries Utility to get {bestPosibleUtility}");
+                Console.WriteLine($"Best found permutation {listOfBest[0].ToString()} with utility of {listOfBest[0].utility}");
+            }
+            Console.ReadKey();
         }
     }
 }

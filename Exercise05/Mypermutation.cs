@@ -10,13 +10,15 @@ namespace Exercise05
         public int permutationLength;
         private readonly Random rnd;
         public int utility;
-
+        public int bestutility;
 
         public Mypermutation(Mypermutation item)
         {
-            this.permutation = item.permutation;
+            int[] newperm = new int[item.permutationLength];
+            Array.Copy(item.permutation, 0, newperm, 0, item.permutationLength);
+            this.permutation = newperm;
             this.permutationLength = item.permutationLength;
-            this.utility = item.utility;
+            CalculateUtility();
             rnd = new Random();
         }
 
@@ -60,7 +62,11 @@ namespace Exercise05
                 }
             }
             utility = notattacked;
-        }
 
+            for (int i = 0; i < permutationLength; i++)
+            {
+                bestutility += i;
+            }
+        }
     }
 }
