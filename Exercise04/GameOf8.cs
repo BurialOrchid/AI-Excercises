@@ -12,14 +12,16 @@ namespace Exercise04
         private readonly int size = 9;
         public bool searched = false;
         public GameOf8 parent = null;
+        public List<GameOf8> children = null;
         public long Depth = 0;
 
         public GameOf8()
         {
             Random rnd = new Random();
-            List<int> permutation = new List<int>();
+
             do
             {
+                List<int> permutation = new List<int>();
                 while (permutation.Count < size)
                 {
                     int nextrnd = rnd.Next(0, size);
@@ -27,10 +29,12 @@ namespace Exercise04
                         permutation.Add(nextrnd);
                 }
                 gamestate = permutation.ToArray();
-            }
-            while (!isSolvable());
+            } while (!isSolvable());
+
             CalculateUtilityByPath();
             CalculateUtilityByPlace();
+            ExpandNode();
+            Console.WriteLine(isSolvable().ToString());
         }
 
         public GameOf8(GameOf8 input)
@@ -41,6 +45,23 @@ namespace Exercise04
             Array.Copy(input.gamestate, 0, gamestate, 0, size);
             CalculateUtilityByPath();
             CalculateUtilityByPlace();
+        }
+
+        public void ExpandNode()
+        {
+            children = new List<GameOf8>();
+            GameOf8 moveup = new GameOf8(this);
+            GameOf8 movedown = new GameOf8(this);
+            GameOf8 moveleft = new GameOf8(this);
+            GameOf8 moveright = new GameOf8(this);
+            if (moveup.MoveUp())
+                children.Add(moveup);
+            if (movedown.MoveDown())
+                children.Add(movedown);
+            if (moveleft.MoveLeft())
+                children.Add(moveleft);
+            if (moveright.MoveRight())
+                children.Add(moveright);
         }
 
         public bool Compare(GameOf8 obj)
@@ -69,7 +90,7 @@ namespace Exercise04
             {
                 if (gamestate[i] != i) utilityByPlace++;
             }
-            // Console.WriteLine(utilityByPlace);
+            //  Console.WriteLine(utilityByPlace);
         }
 
         public void DrawState()
@@ -152,16 +173,14 @@ namespace Exercise04
         public bool isSolvable()
         {
             int inv_count = 0;
-            int[,] arr = new int[(int)Math.Sqrt(size), (int)Math.Sqrt(size)];
 
-            for (int l = 0; l < (int)Math.Sqrt(size); l++)
-                for (int k = 0; k < (int)Math.Sqrt(size); k++)
-                    arr[l, k] = gamestate[l + k];
-
-            for (int i = 0; i < 3 - 1; i++)
-                for (int j = i + 1; j < 3; j++)
-                    if (arr[j, i] > 0 && arr[j, i] > arr[i, j])
-                        inv_count++;
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = i + 1; j < size; j++)
+                {
+                    if (gamestate[j] > gamestate[i]) inv_count++;
+                }
+            }
 
             return (inv_count % 2 == 0);
         }

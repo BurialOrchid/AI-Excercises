@@ -7,168 +7,573 @@ namespace Exercise04
 {
     internal class Program
     {
-        private static List<GameOf8> DFS(GameOf8 root, List<GameOf8> list)
+        private static void DrawSolutionPath(GameOf8 leaf)
         {
-            GameOf8 moveup = new GameOf8(root);
-            GameOf8 movedown = new GameOf8(root);
-            GameOf8 moveleft = new GameOf8(root);
-            GameOf8 moveright = new GameOf8(root);
-
-            if (root.CheckWin())
+            while (leaf.parent != null)
             {
-                Console.WriteLine($"Found solution at the depth of {root.Depth}");
-                return list;
+                leaf.DrawState();
+                Console.WriteLine();
+                leaf = leaf.parent;
             }
-            if (root.Depth > 12) return list;
-            if (moveup.MoveUp())
-            {
-                if (list.Find(x => x.Compare(moveup)) == null)
-                {
-                    list.Add(moveup);
-                    DFS(moveup, list);
-                }
-            }
-            if (movedown.MoveDown())
-            {
-                if (list.Find(x => x.Compare(movedown)) == null)
-                {
-                    list.Add(movedown);
-                    DFS(movedown, list);
-                }
-            }
-            if (moveleft.MoveLeft())
-            {
-                if (list.Find(x => x.Compare(moveleft)) == null)
-                {
-                    list.Add(moveleft);
-                    DFS(moveleft, list);
-                }
-            }
-            if (moveright.MoveRight())
-            {
-                if (list.Find(x => x.Compare(moveright)) == null)
-                {
-                    list.Add(moveright);
-                    DFS(moveright, list);
-                }
-            }
-
-            return list;
+            leaf.DrawState();
         }
 
-        private static List<GameOf8> BFS(List<GameOf8> tree, List<GameOf8> queue)
+        private static GameOf8 DFS(GameOf8 root, int maxdepth)
         {
-            List<GameOf8> nextQueue = new List<GameOf8>();
-            if (tree.Find(x => x.CheckWin()) != null)
+            Stack<GameOf8> open = new Stack<GameOf8>();
+            open.Push(root);
+
+            List<GameOf8> closed = new List<GameOf8>();
+            while (open.Count > 0)
             {
-                GameOf8 winner = tree.Find(x => x.CheckWin());
-                Console.WriteLine($"Found solution at the depth of {winner.Depth}");
-                return tree;
-            }
-            if (tree[tree.Count - 1].Depth > 12) { return tree; }
-            else
-                foreach (GameOf8 item in queue)
+                GameOf8 current = open.Pop();
+                closed.Add(current);
+                current.ExpandNode();
+
+                for (int i = 0; i < current.children.Count; i++)
                 {
-                    GameOf8 moveup = new GameOf8(item);
-                    GameOf8 movedown = new GameOf8(item);
-                    GameOf8 moveleft = new GameOf8(item);
-                    GameOf8 moveright = new GameOf8(item);
-                    if (moveup.MoveUp())
-                        if (tree.Find(x => x.Compare(moveup)) == null)
-                        {
-                            nextQueue.Add(moveup);
-                            tree.Add(moveup);
-                        }
-
-                    if (movedown.MoveDown())
-                        if (tree.Find(x => x.Compare(movedown)) == null)
-                        {
-                            nextQueue.Add(movedown);
-                            tree.Add(movedown);
-                        }
-
-                    if (moveleft.MoveLeft())
-                        if (tree.Find(x => x.Compare(moveleft)) == null)
-                        {
-                            nextQueue.Add(moveleft);
-                            tree.Add(moveleft);
-                        }
-
-                    if (moveright.MoveRight())
-                        if (tree.Find(x => x.Compare(moveright)) == null)
-                        {
-                            nextQueue.Add(moveright);
-                            tree.Add(moveright);
-                        }
+                    GameOf8 currentchild = current.children[i];
+                    if (currentchild.Depth > maxdepth) continue;
+                    if (currentchild.CheckWin())
+                    {
+                        Console.Write($" Searched in {closed.Count} states");
+                        return currentchild;
+                    }
+                    if (!open.Contains(currentchild) && closed.Find(x => x.Compare(currentchild)) == null)
+                    {
+                        open.Push(currentchild);
+                        continue;
+                    }
                 }
-            BFS(tree, nextQueue);
-            return tree;
+            }
+
+            #region old
+
+            //List<GameOf8> tree = new List<GameOf8> { root };
+            //Stack<GameOf8> stack = new Stack<GameOf8>();
+
+            //stack.Push(root);
+
+            //while (stack.Count > 0)
+            //{
+            //    if (stack.Peek().Depth > maxdepth) { stack.Pop(); continue; }
+            //    if (stack.Peek().CheckWin())
+            //    {
+            //        Console.Write($" Searched in {tree.Count} states");
+            //        return stack.ElementAt(0);
+            //    }
+            //    GameOf8 moveup = new GameOf8(stack.Peek());
+            //    GameOf8 movedown = new GameOf8(stack.Peek());
+            //    GameOf8 moveleft = new GameOf8(stack.Peek());
+            //    GameOf8 moveright = new GameOf8(stack.Peek());
+            //    stack.Pop();
+
+            //    if (moveleft.MoveLeft())
+            //    {
+            //        if (tree.Find(x => x.Compare(moveleft)) == null)
+            //        {
+            //            stack.Push(moveleft);
+            //            tree.Add(moveleft);
+            //        }
+            //    }
+            //    if (moveup.MoveUp())
+            //    {
+            //        if (tree.Find(x => x.Compare(moveup)) == null)
+            //        {
+            //            stack.Push(moveup);
+            //            tree.Add(moveup);
+            //        }
+            //    }
+
+            //    if (movedown.MoveDown())
+            //    {
+            //        if (tree.Find(x => x.Compare(movedown)) == null)
+            //        {
+            //            stack.Push(movedown);
+            //            tree.Add(movedown);
+            //        }
+            //    }
+
+            //    if (moveright.MoveRight())
+            //    {
+            //        if (tree.Find(x => x.Compare(moveright)) == null)
+            //        {
+            //            stack.Push(moveright);
+            //            tree.Add(moveright);
+            //        }
+            //    }
+
+            //}
+
+            #endregion old
+
+            Console.Write($" Searched in {closed.Count} states");
+            return null;
         }
 
-        private static GameOf8 GBestFSPath(GameOf8 root)
+        private static GameOf8 BFS(GameOf8 root, int maxdepth)
         {
             List<GameOf8> tree = new List<GameOf8> { root };
-            List<GameOf8> PriorityQueue = new List<GameOf8> { root };
-            while (PriorityQueue.Count > 0)
+            List<GameOf8> open = new List<GameOf8> { root };
+            List<GameOf8> closed = new List<GameOf8>();
+            while (open.Count > 0)
             {
-                // Debug.WriteLine(PriorityQueue[0].utilityByPath);
-                PriorityQueue = PriorityQueue.OrderBy(x => x.utilityByPath).ToList();
-                if (PriorityQueue[0].CheckWin()) break;
-                else
+                GameOf8 current = open.ElementAt(0);
+                closed.Add(current);
+                open.RemoveAt(0);
+
+                current.ExpandNode();
+
+                for (int i = 0; i < current.children.Count; i++)
                 {
-                    GameOf8 moveup = new GameOf8(PriorityQueue[0]);
-                    GameOf8 movedown = new GameOf8(PriorityQueue[0]);
-                    GameOf8 moveleft = new GameOf8(PriorityQueue[0]);
-                    GameOf8 moveright = new GameOf8(PriorityQueue[0]);
-                    if (moveup.MoveUp())
-                        if (tree.Find(x => x.Compare(moveup)) == null)
-                        {
-                            PriorityQueue.Add(moveup);
-                            tree.Add(moveup);
-                        }
-
-                    if (movedown.MoveDown())
-                        if (tree.Find(x => x.Compare(movedown)) == null)
-                        {
-                            PriorityQueue.Add(movedown);
-                            tree.Add(movedown);
-                        }
-
-                    if (moveleft.MoveLeft())
-                        if (tree.Find(x => x.Compare(moveleft)) == null)
-                        {
-                            PriorityQueue.Add(moveleft);
-                            tree.Add(moveleft);
-                        }
-
-                    if (moveright.MoveRight())
-                        if (tree.Find(x => x.Compare(moveright)) == null)
-                        {
-                            PriorityQueue.Add(moveright);
-                            tree.Add(moveright);
-                        }
+                    GameOf8 currentchild = current.children[i];
+                    if (currentchild.Depth > maxdepth) break;
+                    if (currentchild.CheckWin())
+                    {
+                        Console.Write($" Searched in {closed.Count} states");
+                        return currentchild;
+                    }
+                    if (open.Find(x => x.Compare(currentchild)) == null && closed.Find(x => x.Compare(currentchild)) == null)
+                    {
+                        open.Add(currentchild);
+                        tree.Add(currentchild);
+                    }
                 }
-                PriorityQueue.RemoveAt(0);
+
+                #region old
+
+                //if (queue.ElementAt(0).CheckWin())
+                //{
+                //}
+                //GameOf8 moveup = new GameOf8(queue.ElementAt(0));
+                //GameOf8 movedown = new GameOf8(queue.ElementAt(0));
+                //GameOf8 moveleft = new GameOf8(queue.ElementAt(0));
+                //GameOf8 moveright = new GameOf8(queue.ElementAt(0));
+                //if (moveup.MoveUp())
+                //    if (tree.Find(x => x.Compare(moveup)) == null)
+                //    {
+                //        queue.Add(moveup);
+                //        tree.Add(moveup);
+                //    }
+
+                //if (movedown.MoveDown())
+                //    if (tree.Find(x => x.Compare(movedown)) == null)
+                //    {
+                //        queue.Add(movedown);
+                //        tree.Add(movedown);
+                //    }
+
+                //if (moveleft.MoveLeft())
+                //    if (tree.Find(x => x.Compare(moveleft)) == null)
+                //    {
+                //        queue.Add(moveleft);
+                //        tree.Add(moveleft);
+                //    }
+
+                //if (moveright.MoveRight())
+                //    if (tree.Find(x => x.Compare(moveright)) == null)
+                //    {
+                //        queue.Add(moveright);
+                //        tree.Add(moveright);
+                //    }
+                //queue.RemoveAt(0);
+
+                #endregion old
             }
-            Console.WriteLine($"Searched solution in {tree.Count} number of states");
-            Console.WriteLine($"Solution found on level {PriorityQueue[0].Depth}");
-            return PriorityQueue[0];
+            Console.Write($" Searched in {tree.Count} states");
+            return null;
+        }
+
+        private static GameOf8 GBestFSPath(GameOf8 root, int maxdepth)
+        {
+            List<GameOf8> open = new List<GameOf8> { root };
+            List<GameOf8> closed = new List<GameOf8>();
+            while (open.Count > 0)
+            {
+                open = open.OrderBy(x => x.utilityByPath).ToList();
+                GameOf8 current = open.ElementAt(0);
+                closed.Add(current);
+                open.RemoveAt(0);
+
+                current.ExpandNode();
+
+                for (int i = 0; i < current.children.Count; i++)
+                {
+                    GameOf8 currentchild = current.children[i];
+                    if (currentchild.Depth > maxdepth) break;
+                    if (currentchild.CheckWin())
+                    {
+                        Console.Write($" Searched in {closed.Count} states");
+                        return currentchild;
+                    }
+                    if (open.Find(x => x.Compare(currentchild)) == null && closed.Find(x => x.Compare(currentchild)) == null)
+                    {
+                        open.Add(currentchild);
+                    }
+                }
+            }
+
+            #region old
+
+            //List<GameOf8> tree = new List<GameOf8> { root };
+            //List<GameOf8> PriorityQueue = new List<GameOf8> { root };
+            //while (PriorityQueue.Count > 0)
+            //{
+            //    PriorityQueue = PriorityQueue.OrderBy(x => x.utilityByPath).ToList();
+            //    if (PriorityQueue[0].CheckWin())
+            //    {
+            //        Console.Write($" Searched in {tree.Count} states");
+            //        return PriorityQueue.ElementAt(0);
+            //    }
+            //    else
+            //    {
+            //        GameOf8 moveup = new GameOf8(PriorityQueue[0]);
+            //        GameOf8 movedown = new GameOf8(PriorityQueue[0]);
+            //        GameOf8 moveleft = new GameOf8(PriorityQueue[0]);
+            //        GameOf8 moveright = new GameOf8(PriorityQueue[0]);
+            //        if (moveup.MoveUp())
+            //            if (tree.Find(x => x.Compare(moveup)) == null)
+            //            {
+            //                PriorityQueue.Add(moveup);
+            //                tree.Add(moveup);
+            //            }
+
+            //        if (movedown.MoveDown())
+            //            if (tree.Find(x => x.Compare(movedown)) == null)
+            //            {
+            //                PriorityQueue.Add(movedown);
+            //                tree.Add(movedown);
+            //            }
+
+            //        if (moveleft.MoveLeft())
+            //            if (tree.Find(x => x.Compare(moveleft)) == null)
+            //            {
+            //                PriorityQueue.Add(moveleft);
+            //                tree.Add(moveleft);
+            //            }
+
+            //        if (moveright.MoveRight())
+            //            if (tree.Find(x => x.Compare(moveright)) == null)
+            //            {
+            //                PriorityQueue.Add(moveright);
+            //                tree.Add(moveright);
+            //            }
+            //    }
+            //    PriorityQueue.RemoveAt(0);
+            //}
+
+            #endregion old
+
+            Console.Write($" Searched in {closed.Count} states");
+            return null;
+        }
+
+        private static GameOf8 GBestFSPlace(GameOf8 root, int maxdepth)
+        {
+            List<GameOf8> open = new List<GameOf8> { root };
+            List<GameOf8> closed = new List<GameOf8>();
+            while (open.Count > 0)
+            {
+                open = open.OrderBy(x => x.utilityByPlace).ToList();
+                GameOf8 current = open.ElementAt(0);
+                closed.Add(current);
+                open.RemoveAt(0);
+
+                current.ExpandNode();
+
+                for (int i = 0; i < current.children.Count; i++)
+                {
+                    GameOf8 currentchild = current.children[i];
+                    if (currentchild.Depth > maxdepth) break;
+                    if (currentchild.CheckWin())
+                    {
+                        Console.Write($" Searched in {closed.Count} states");
+                        return currentchild;
+                    }
+                    if (open.Find(x => x.Compare(currentchild)) == null && closed.Find(x => x.Compare(currentchild)) == null)
+                    {
+                        open.Add(currentchild);
+                    }
+                }
+            }
+
+            #region old
+
+            //List<GameOf8> tree = new List<GameOf8> { root };
+            //List<GameOf8> PriorityQueue = new List<GameOf8> { root };
+            //while (PriorityQueue.Count > 0)
+            //{
+            //    PriorityQueue = PriorityQueue.OrderBy(x => x.utilityByPlace).ToList();
+            //    if (PriorityQueue[0].CheckWin())
+            //    {
+            //        Console.Write($" Searched in {tree.Count} states");
+            //        return PriorityQueue.ElementAt(0);
+            //    }
+            //    else
+            //    {
+            //        GameOf8 moveup = new GameOf8(PriorityQueue[0]);
+            //        GameOf8 movedown = new GameOf8(PriorityQueue[0]);
+            //        GameOf8 moveleft = new GameOf8(PriorityQueue[0]);
+            //        GameOf8 moveright = new GameOf8(PriorityQueue[0]);
+            //        if (moveup.MoveUp())
+            //            if (tree.Find(x => x.Compare(moveup)) == null)
+            //            {
+            //                PriorityQueue.Add(moveup);
+            //                tree.Add(moveup);
+            //            }
+
+            //        if (movedown.MoveDown())
+            //            if (tree.Find(x => x.Compare(movedown)) == null)
+            //            {
+            //                PriorityQueue.Add(movedown);
+            //                tree.Add(movedown);
+            //            }
+
+            //        if (moveleft.MoveLeft())
+            //            if (tree.Find(x => x.Compare(moveleft)) == null)
+            //            {
+            //                PriorityQueue.Add(moveleft);
+            //                tree.Add(moveleft);
+            //            }
+
+            //        if (moveright.MoveRight())
+            //            if (tree.Find(x => x.Compare(moveright)) == null)
+            //            {
+            //                PriorityQueue.Add(moveright);
+            //                tree.Add(moveright);
+            //            }
+            //    }
+            //    PriorityQueue.RemoveAt(0);
+            //}
+
+            #endregion old
+
+            Console.Write($" Searched in {closed.Count} states");
+            return null;
+        }
+
+        private static GameOf8 AStarPath(GameOf8 root, int maxdepth)
+        {
+            List<GameOf8> open = new List<GameOf8> { root };
+            List<GameOf8> closed = new List<GameOf8>();
+            while (open.Count > 0)
+            {
+                open = open.OrderBy(x => x.utilityByPath + x.Depth).ToList();
+                GameOf8 current = open.ElementAt(0);
+                closed.Add(current);
+                open.RemoveAt(0);
+
+                current.ExpandNode();
+
+                for (int i = 0; i < current.children.Count; i++)
+                {
+                    GameOf8 currentchild = current.children[i];
+                    if (currentchild.Depth > maxdepth) break;
+                    if (currentchild.CheckWin())
+                    {
+                        Console.Write($" Searched in {closed.Count} states");
+                        return currentchild;
+                    }
+                    if (open.Find(x => x.Compare(currentchild)) == null && closed.Find(x => x.Compare(currentchild)) == null)
+                    {
+                        open.Add(currentchild);
+                    }
+                }
+            }
+
+            #region old
+
+            //List<GameOf8> tree = new List<GameOf8> { root };
+            //List<GameOf8> PriorityQueue = new List<GameOf8> { root };
+            //while (PriorityQueue.Count > 0 && PriorityQueue[0].Depth < maxdepth)
+            //{
+            //    PriorityQueue = PriorityQueue.OrderBy(x => x.utilityByPath + x.Depth).ToList();
+            //    if (PriorityQueue[0].CheckWin())
+            //    {
+            //        Console.Write($" Searched in {tree.Count} states");
+            //        return PriorityQueue.ElementAt(0);
+            //    }
+            //    else
+            //    {
+            //        GameOf8 moveup = new GameOf8(PriorityQueue[0]);
+            //        GameOf8 movedown = new GameOf8(PriorityQueue[0]);
+            //        GameOf8 moveleft = new GameOf8(PriorityQueue[0]);
+            //        GameOf8 moveright = new GameOf8(PriorityQueue[0]);
+            //        if (moveup.MoveUp())
+            //            if (tree.Find(x => x.Compare(moveup)) == null)
+            //            {
+            //                PriorityQueue.Add(moveup);
+            //                tree.Add(moveup);
+            //            }
+
+            //        if (movedown.MoveDown())
+            //            if (tree.Find(x => x.Compare(movedown)) == null)
+            //            {
+            //                PriorityQueue.Add(movedown);
+            //                tree.Add(movedown);
+            //            }
+
+            //        if (moveleft.MoveLeft())
+            //            if (tree.Find(x => x.Compare(moveleft)) == null)
+            //            {
+            //                PriorityQueue.Add(moveleft);
+            //                tree.Add(moveleft);
+            //            }
+
+            //        if (moveright.MoveRight())
+            //            if (tree.Find(x => x.Compare(moveright)) == null)
+            //            {
+            //                PriorityQueue.Add(moveright);
+            //                tree.Add(moveright);
+            //            }
+            //    }
+            //    PriorityQueue.RemoveAt(0);
+            //}
+
+            #endregion old
+
+            Console.Write($" Searched in {closed.Count} states");
+            return null;
+        }
+
+        private static GameOf8 AStarPlace(GameOf8 root, int maxdepth)
+        {
+            List<GameOf8> open = new List<GameOf8> { root };
+            List<GameOf8> closed = new List<GameOf8>();
+            while (open.Count > 0)
+            {
+                open = open.OrderBy(x => x.utilityByPlace + x.Depth).ToList();
+                GameOf8 current = open.ElementAt(0);
+                closed.Add(current);
+                open.RemoveAt(0);
+
+                current.ExpandNode();
+
+                for (int i = 0; i < current.children.Count; i++)
+                {
+                    GameOf8 currentchild = current.children[i];
+                    if (currentchild.Depth > maxdepth) break;
+                    if (currentchild.CheckWin())
+                    {
+                        Console.Write($" Searched in {closed.Count} states");
+                        return currentchild;
+                    }
+                    if (open.Find(x => x.Compare(currentchild)) == null && closed.Find(x => x.Compare(currentchild)) == null)
+                    {
+                        open.Add(currentchild);
+                    }
+                }
+            }
+
+            #region old
+
+            //List<GameOf8> tree = new List<GameOf8> { root };
+            //List<GameOf8> PriorityQueue = new List<GameOf8> { root };
+            //while (PriorityQueue.Count > 0 && PriorityQueue[0].Depth < maxdepth)
+            //{
+            //    PriorityQueue = PriorityQueue.OrderBy(x => x.utilityByPlace + x.Depth).ToList();
+            //    if (PriorityQueue[0].CheckWin())
+            //    {
+            //        Console.Write($" Searched in {tree.Count} states");
+            //        return PriorityQueue.ElementAt(0);
+            //    }
+            //    else
+            //    {
+            //        GameOf8 moveup = new GameOf8(PriorityQueue[0]);
+            //        GameOf8 movedown = new GameOf8(PriorityQueue[0]);
+            //        GameOf8 moveleft = new GameOf8(PriorityQueue[0]);
+            //        GameOf8 moveright = new GameOf8(PriorityQueue[0]);
+            //        if (moveup.MoveUp())
+            //            if (tree.Find(x => x.Compare(moveup)) == null)
+            //            {
+            //                PriorityQueue.Add(moveup);
+            //                tree.Add(moveup);
+            //            }
+
+            //        if (movedown.MoveDown())
+            //            if (tree.Find(x => x.Compare(movedown)) == null)
+            //            {
+            //                PriorityQueue.Add(movedown);
+            //                tree.Add(movedown);
+            //            }
+
+            //        if (moveleft.MoveLeft())
+            //            if (tree.Find(x => x.Compare(moveleft)) == null)
+            //            {
+            //                PriorityQueue.Add(moveleft);
+            //                tree.Add(moveleft);
+            //            }
+
+            //        if (moveright.MoveRight())
+            //            if (tree.Find(x => x.Compare(moveright)) == null)
+            //            {
+            //                PriorityQueue.Add(moveright);
+            //                tree.Add(moveright);
+            //            }
+            //    }
+            //    PriorityQueue.RemoveAt(0);
+            //}
+
+            #endregion old
+
+            Console.Write($" Searched in {closed.Count} states");
+            return null;
         }
 
         private static void Main(string[] args)
         {
             //for (int i = 0; i < 50; i++)
             //{
-            //    GameOf8 game = new GameOf8();
-            //    Console.Write($"{game.isSolvable().ToString()} ");
-            //    List<GameOf8> listOfNodes = new List<GameOf8> { game };
-            //    List<GameOf8> queue = new List<GameOf8> { game };
-            //    listOfNodes = BFS(listOfNodes, queue);
-            //    Console.WriteLine($"Searched solution in {listOfNodes.Count} number of states");
+            //
+            //    GameOf8 solution = DFS(game, 22);
+            //    if (solution != null) Console.Write($" Found on level {solution.Depth}");
             //}
-
             GameOf8 game = new GameOf8();
-            GBestFSPath(game);
+            int maxdepth = 25;
+
+            for (int i = 0; i < 6; i++)
+            {
+                Console.WriteLine();
+                switch (i)
+                {
+                    case 0: Console.WriteLine($"GREEDY BEST FIRST SEARCH BY PATH UTILITY"); break;
+                    case 1: Console.WriteLine($"GREEDY BEST FIRST SEARCH BY PLACE UTILITY"); break;
+                    case 2: Console.WriteLine($"A STAR BY PATH UTILITY"); break;
+                    case 3: Console.WriteLine($"A STAR BY PLACE UTILITY"); break;
+                    case 4: Console.WriteLine($"DEPTH FIRST SEARCH"); break;
+                    case 5: Console.WriteLine($"BREATH FIRST SEARCH"); break;
+                }
+                var watch = Stopwatch.StartNew();
+                GameOf8 solution = null;
+                switch (i)
+                {
+                    case 0: solution = GBestFSPath(game, maxdepth); break;
+                    case 1: solution = GBestFSPlace(game, maxdepth); break;
+                    case 2: solution = AStarPath(game, maxdepth); break;
+                    case 3: solution = AStarPlace(game, maxdepth); break;
+                    case 4: solution = DFS(game, maxdepth); break;
+                    case 5: solution = BFS(game, maxdepth); break;
+                }
+
+                watch.Stop();
+                float elapsedMs = watch.ElapsedMilliseconds;
+                if (solution != null) Console.Write($" Found on level {solution.Depth}");
+                Console.Write($" Elapsed time:{elapsedMs} ms.\n");
+                //if (solution != null)
+                //{
+                //    Console.Write($" Trace Path To solution? Y/N");
+                //    char x = Console.ReadKey().KeyChar;
+                //    Console.WriteLine();
+                //    switch (x)
+                //    {
+                //        case 'y':
+                //            DrawSolutionPath(solution);
+                //            break;
+                //    }
+                //}
+            }
+
+            #region Game to Play
 
             //while (true)
             //{
@@ -203,6 +608,8 @@ namespace Exercise04
 
             //    Console.Clear();
             //}
+
+            #endregion Game to Play
 
             Console.ReadKey();
         }
