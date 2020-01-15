@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+//Krzysztof Mroziewicz
 namespace Exercise06
 {
     internal class Program

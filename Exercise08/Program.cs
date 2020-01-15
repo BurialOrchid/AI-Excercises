@@ -1,5 +1,6 @@
 ﻿using System;
 
+//Krzysztof Mroziewicz
 namespace Exercise08
 {
     internal class Program

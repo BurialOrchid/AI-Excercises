@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+//Mroziewicz Krzysztof
 namespace Exercise01
 {
     internal static class Program

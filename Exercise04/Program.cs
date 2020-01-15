@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
+//Krzysztof Mroziewicz
 namespace Exercise04
 {
     internal class Program

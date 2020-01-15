@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
+//Krzysztof Mroziewicz
 namespace Exercise06
 {
     internal class Mypermutation
@@ -18,6 +19,7 @@ namespace Exercise06
             this.utility = item.utility;
             rnd = new Random();
         }
+
         public Mypermutation(int size)
         {
             permutationLength = size;

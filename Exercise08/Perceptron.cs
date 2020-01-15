@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using System.Text;
 
+//Krzysztof Mroziewicz
 namespace Exercise08
 {
     internal class Point

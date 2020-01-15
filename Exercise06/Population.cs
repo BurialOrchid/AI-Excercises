@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
+//Krzysztof Mroziewicz
 namespace Exercise06
 {
-    class Population
+    internal class Population
     {
         public Mypermutation[] populationarray;
         private readonly Random rnd;
@@ -86,7 +87,7 @@ namespace Exercise06
             {
                 sum += item.utility;
             }
-            for (int j = 0; j < populationSize; j ++)
+            for (int j = 0; j < populationSize; j++)
             {
                 choice = rnd.Next(0, sum);
 

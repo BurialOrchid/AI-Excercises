@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
+//Krzysztof Mroziewicz
 namespace Exercise05
 {
     internal class Mypermutation

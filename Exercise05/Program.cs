@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
+//Krzysztof Mroziewicz
 namespace Exercise05
 {
     internal class Program

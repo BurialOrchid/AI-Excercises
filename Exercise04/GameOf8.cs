@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
+//Krzysztof Mroziewicz
 namespace Exercise04
 {
     internal class GameOf8
