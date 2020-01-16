@@ -90,7 +90,7 @@ namespace Exercise05
             int bestUtility = 0;
             int numofboards = 1;
             bool found = false;
-            int numberOfTries = 10;
+            int numberOfTries = 5;
             int bestPosibleUtility = startPermutation.bestutility;
 
             Random rnd = new Random();

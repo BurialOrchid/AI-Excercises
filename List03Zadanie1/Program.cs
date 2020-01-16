@@ -78,19 +78,19 @@ namespace Exercise03
         private static int[] MRV(int size)
         {
             int[] sol = new int[size];
-            sol[0] = returnMRV(sol, 0);
-            sol[1] = returnMRV(sol, 1);
-            sol[2] = returnMRV(sol, 2);
-            sol[3] = returnMRV(sol, 3);
-            sol[4] = returnMRV(sol, 4);
-            sol[5] = returnMRV(sol, 5);
-            sol[6] = returnMRV(sol, 6);
-            sol[7] = returnMRV(sol, 7);
-            PrintSol(sol);
+            int[] index = new int[size];
+            int currentindex = 1;
+            while (!CheckSolution(sol))
+            {
+                sol[currentindex] = returnMRV(sol, currentindex)[0];
+                currentindex++;
+                PrintSol(sol);
+            }
+
             return null;
         }
 
-        private static int returnMRV(int[] perm, int nextindex)
+        private static int[] returnMRV(int[] perm, int nextindex)
         {
             List<int> remaining = new List<int>();
             for (int i = 0; i < perm.Length; i++)
@@ -103,12 +103,16 @@ namespace Exercise03
             {
                 for (int m = 0; m < perm.Length; m++)
                 {
+                    if (remaining.Count == 0) break;
                     if (Math.Abs(perm[i] - m) == Math.Abs(i - nextindex)) remaining.Remove(m);
                 }
+                if (remaining.Count == 0) break;
             }
             if (remaining.Count > 0)
-                return remaining.ElementAt(0);
-            return 0;
+            return remaining.ToArray();
+            remaining.Add(-1);
+            return remaining.ToArray();
+
         }
 
         private static void Main(string[] args)

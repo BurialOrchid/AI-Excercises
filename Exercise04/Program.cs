@@ -21,28 +21,34 @@ namespace Exercise04
 
         private static GameOf8 DFS(GameOf8 root, int maxdepth)
         {
-            Stack<GameOf8> open = new Stack<GameOf8>();
-            open.Push(root);
-
+            List<GameOf8> open = new List<GameOf8> { root };
             List<GameOf8> closed = new List<GameOf8>();
             while (open.Count > 0)
             {
-                GameOf8 current = open.Pop();
+                if (open.ElementAt(0).Depth == maxdepth)
+                {
+                    closed.Add(open.ElementAt(0));
+                    open.RemoveAt(0);
+                    continue;
+                }
+                GameOf8 current = open.ElementAt(0);
+                open.RemoveAt(0);
                 closed.Add(current);
-                current.ExpandNode();
 
+                if (current.CheckWin())
+                {
+                    Console.Write($" Searched in {closed.Count} states");
+                    return current;
+                }
+
+                current.ExpandNode();
                 for (int i = 0; i < current.children.Count; i++)
                 {
                     GameOf8 currentchild = current.children[i];
-                    if (currentchild.Depth > maxdepth) continue;
-                    if (currentchild.CheckWin())
+
+                    if (open.Find(x => x.Compare(currentchild)) == null && closed.Find(x => x.Compare(currentchild)) == null)
                     {
-                        Console.Write($" Searched in {closed.Count} states");
-                        return currentchild;
-                    }
-                    if (!open.Contains(currentchild) && closed.Find(x => x.Compare(currentchild)) == null)
-                    {
-                        open.Push(currentchild);
+                        open.Insert(0, currentchild);
                         continue;
                     }
                 }
@@ -114,30 +120,35 @@ namespace Exercise04
 
         private static GameOf8 BFS(GameOf8 root, int maxdepth)
         {
-            List<GameOf8> tree = new List<GameOf8> { root };
             List<GameOf8> open = new List<GameOf8> { root };
             List<GameOf8> closed = new List<GameOf8>();
             while (open.Count > 0)
             {
+                if (open.ElementAt(0).Depth == maxdepth)
+                {
+                    closed.Add(open.ElementAt(0));
+                    open.RemoveAt(0);
+                    continue;
+                }
                 GameOf8 current = open.ElementAt(0);
+
                 closed.Add(current);
                 open.RemoveAt(0);
+                if (current.CheckWin())
+                {
+                    Console.Write($" Searched in {closed.Count} states");
+                    return current;
+                }
 
                 current.ExpandNode();
 
                 for (int i = 0; i < current.children.Count; i++)
                 {
                     GameOf8 currentchild = current.children[i];
-                    if (currentchild.Depth > maxdepth) break;
-                    if (currentchild.CheckWin())
-                    {
-                        Console.Write($" Searched in {closed.Count} states");
-                        return currentchild;
-                    }
                     if (open.Find(x => x.Compare(currentchild)) == null && closed.Find(x => x.Compare(currentchild)) == null)
                     {
                         open.Add(currentchild);
-                        tree.Add(currentchild);
+
                     }
                 }
 
@@ -181,7 +192,7 @@ namespace Exercise04
 
                 #endregion old
             }
-            Console.Write($" Searched in {tree.Count} states");
+            Console.Write($" Searched in {closed.Count} states");
             return null;
         }
 
@@ -192,24 +203,30 @@ namespace Exercise04
             while (open.Count > 0)
             {
                 open = open.OrderBy(x => x.utilityByPath).ToList();
+                if (open.ElementAt(0).Depth == maxdepth)
+                {
+                    closed.Add(open.ElementAt(0));
+                    open.RemoveAt(0);
+                    continue;
+                }
                 GameOf8 current = open.ElementAt(0);
                 closed.Add(current);
                 open.RemoveAt(0);
+                if (current.CheckWin())
+                {
+                    Console.Write($" Searched in {closed.Count} states");
+                    return current;
+                }
 
                 current.ExpandNode();
 
                 for (int i = 0; i < current.children.Count; i++)
                 {
                     GameOf8 currentchild = current.children[i];
-                    if (currentchild.Depth > maxdepth) break;
-                    if (currentchild.CheckWin())
-                    {
-                        Console.Write($" Searched in {closed.Count} states");
-                        return currentchild;
-                    }
                     if (open.Find(x => x.Compare(currentchild)) == null && closed.Find(x => x.Compare(currentchild)) == null)
                     {
                         open.Add(currentchild);
+
                     }
                 }
             }
@@ -276,21 +293,26 @@ namespace Exercise04
             while (open.Count > 0)
             {
                 open = open.OrderBy(x => x.utilityByPlace).ToList();
+                if (open.ElementAt(0).Depth == maxdepth)
+                {
+                    closed.Add(open.ElementAt(0));
+                    open.RemoveAt(0);
+                    continue;
+                }
                 GameOf8 current = open.ElementAt(0);
                 closed.Add(current);
                 open.RemoveAt(0);
-
+                if (current.CheckWin())
+                {
+                    Console.Write($" Searched in {closed.Count} states");
+                    return current;
+                }
                 current.ExpandNode();
 
                 for (int i = 0; i < current.children.Count; i++)
                 {
                     GameOf8 currentchild = current.children[i];
-                    if (currentchild.Depth > maxdepth) break;
-                    if (currentchild.CheckWin())
-                    {
-                        Console.Write($" Searched in {closed.Count} states");
-                        return currentchild;
-                    }
+
                     if (open.Find(x => x.Compare(currentchild)) == null && closed.Find(x => x.Compare(currentchild)) == null)
                     {
                         open.Add(currentchild);
@@ -360,21 +382,27 @@ namespace Exercise04
             while (open.Count > 0)
             {
                 open = open.OrderBy(x => x.utilityByPath + x.Depth).ToList();
+                if (open.ElementAt(0).Depth == maxdepth)
+                {
+                    closed.Add(open.ElementAt(0));
+                    open.RemoveAt(0);
+                    continue;
+                }
                 GameOf8 current = open.ElementAt(0);
                 closed.Add(current);
                 open.RemoveAt(0);
-
+                if (current.CheckWin())
+                {
+                    Console.Write($" Searched in {closed.Count} states");
+                    return current;
+                }
                 current.ExpandNode();
 
                 for (int i = 0; i < current.children.Count; i++)
                 {
                     GameOf8 currentchild = current.children[i];
-                    if (currentchild.Depth > maxdepth) break;
-                    if (currentchild.CheckWin())
-                    {
-                        Console.Write($" Searched in {closed.Count} states");
-                        return currentchild;
-                    }
+
+
                     if (open.Find(x => x.Compare(currentchild)) == null && closed.Find(x => x.Compare(currentchild)) == null)
                     {
                         open.Add(currentchild);
@@ -444,21 +472,27 @@ namespace Exercise04
             while (open.Count > 0)
             {
                 open = open.OrderBy(x => x.utilityByPlace + x.Depth).ToList();
+                if (open.ElementAt(0).Depth == maxdepth)
+                {
+                    closed.Add(open.ElementAt(0));
+                    open.RemoveAt(0);
+                    continue;
+                }
                 GameOf8 current = open.ElementAt(0);
                 closed.Add(current);
                 open.RemoveAt(0);
-
+                if (current.CheckWin())
+                {
+                    Console.Write($" Searched in {closed.Count} states");
+                    return current;
+                }
                 current.ExpandNode();
 
                 for (int i = 0; i < current.children.Count; i++)
                 {
                     GameOf8 currentchild = current.children[i];
-                    if (currentchild.Depth > maxdepth) break;
-                    if (currentchild.CheckWin())
-                    {
-                        Console.Write($" Searched in {closed.Count} states");
-                        return currentchild;
-                    }
+
+
                     if (open.Find(x => x.Compare(currentchild)) == null && closed.Find(x => x.Compare(currentchild)) == null)
                     {
                         open.Add(currentchild);
@@ -523,14 +557,10 @@ namespace Exercise04
 
         private static void Main(string[] args)
         {
-            //for (int i = 0; i < 50; i++)
-            //{
-            //
-            //    GameOf8 solution = DFS(game, 22);
-            //    if (solution != null) Console.Write($" Found on level {solution.Depth}");
-            //}
+            Console.WriteLine("Hello\n");
+
             GameOf8 game = new GameOf8();
-            int maxdepth = 25;
+            int maxdepth = 17;
 
             for (int i = 0; i < 6; i++)
             {
@@ -560,19 +590,20 @@ namespace Exercise04
                 float elapsedMs = watch.ElapsedMilliseconds;
                 if (solution != null) Console.Write($" Found on level {solution.Depth}");
                 Console.Write($" Elapsed time:{elapsedMs} ms.\n");
-                //if (solution != null)
-                //{
-                //    Console.Write($" Trace Path To solution? Y/N");
-                //    char x = Console.ReadKey().KeyChar;
-                //    Console.WriteLine();
-                //    switch (x)
-                //    {
-                //        case 'y':
-                //            DrawSolutionPath(solution);
-                //            break;
-                //    }
-                //}
+                if (solution != null)
+                {
+                    Console.Write($" Trace Path To solution? Y/N");
+                    char x = Console.ReadKey().KeyChar;
+                    Console.WriteLine();
+                    switch (x)
+                    {
+                        case 'y':
+                            DrawSolutionPath(solution);
+                            break;
+                    }
+                }
             }
+            Console.WriteLine("\nEND");
 
             #region Game to Play
 

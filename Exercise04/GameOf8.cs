@@ -20,22 +20,24 @@ namespace Exercise04
         {
             Random rnd = new Random();
 
-            do
+            List<int> permutation = new List<int>();
+            while (permutation.Count < size)
             {
-                List<int> permutation = new List<int>();
-                while (permutation.Count < size)
-                {
-                    int nextrnd = rnd.Next(0, size);
-                    if (!permutation.Contains(nextrnd))
-                        permutation.Add(nextrnd);
-                }
-                gamestate = permutation.ToArray();
-            } while (!isSolvable());
-
+                int nextrnd = rnd.Next(0, size);
+                if (!permutation.Contains(nextrnd))
+                    permutation.Add(nextrnd);
+            }
+            gamestate = permutation.ToArray();
             CalculateUtilityByPath();
             CalculateUtilityByPlace();
             ExpandNode();
-            Console.WriteLine(isSolvable().ToString());
+
+            gamestate = new int[] {
+                3,1,2,
+                6,4,0,
+                7,8,5
+             };
+
         }
 
         public GameOf8(GameOf8 input)
@@ -169,21 +171,6 @@ namespace Exercise04
                 if (gamestate[i] != i) return false;
             }
             return true;
-        }
-
-        public bool isSolvable()
-        {
-            int inv_count = 0;
-
-            for (int i = 0; i < size; i++)
-            {
-                for (int j = i + 1; j < size; j++)
-                {
-                    if (gamestate[j] > gamestate[i]) inv_count++;
-                }
-            }
-
-            return (inv_count % 2 == 0);
         }
     }
 }

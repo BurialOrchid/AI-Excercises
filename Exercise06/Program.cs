@@ -36,7 +36,7 @@ namespace Exercise06
         private static void Main(string[] args)
         {
             int permutationLength = 8;
-            int populationsize = 30;
+            int populationsize = 4;
             bool foundSolution = false;
             int generation = 1;
             int solutionindex = -1;
